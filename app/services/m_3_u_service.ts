@@ -38,7 +38,7 @@ export function importM3U(file: string) {
           movie.group_title = currentData[3]
           movie.title = currentData[4]
           movieList.push(movie)
-
+          movie.save()
           currentData = []
         } else if (line.includes('serie')) {
           const serie = new Serie()
