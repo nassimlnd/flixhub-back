@@ -17,8 +17,23 @@ export default class MoviesController {
     let groupTitle = decodeURIComponent(params.groupTitle)
     groupTitle = groupTitle.replaceAll('+', ' ')
     const user = auth.user
-    console.log('[DEBUG] User ' + user?.email + ' is getting movies by group ' + groupTitle)
+    console.log('[DEBUG] User ' + user?.email + ' is getting all movies by group ' + groupTitle)
     let movies = await Movie.query().where('group_title', groupTitle)
+    return response.json({
+      movies: movies,
+    })
+  }
+
+  async getMoviesByGroupAndAmount({ request, response, auth }: HttpContext) {
+    const params = request.params()
+    let groupTitle = decodeURIComponent(params.groupTitle)
+    groupTitle = groupTitle.replaceAll('+', ' ')
+    const amount = Number.parseInt(params.amount)
+    const user = auth.user
+    console.log(
+      '[DEBUG] User ' + user?.email + ' is getting ' + amount + ' movies by group ' + groupTitle
+    )
+    let movies = await Movie.query().where('group_title', groupTitle).limit(amount)
     return response.json({
       movies: movies,
     })

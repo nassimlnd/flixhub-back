@@ -73,8 +73,6 @@ export function importM3U(file: string) {
   console.log('End of importM3U function')
 }
 
-export function parseEXTINTLine(line: string) {}
-
 export async function parseFile(rawFile: MultipartFile): Promise<string> {
   return new Promise((resolve, reject) => {
     if (rawFile.tmpPath) {
