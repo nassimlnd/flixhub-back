@@ -39,6 +39,15 @@ export default class MoviesController {
     })
   }
 
+  async getRandomMovie({ response, auth }: HttpContext) {
+    const user = auth.user
+    console.log('[DEBUG] User ' + user?.email + ' is getting a random movie')
+    let movie = await Movie.query().orderByRaw('RAND()').limit(1)
+    return response.json({
+      movie: movie,
+    })
+  }
+
   async getGroups({ response }: HttpContext) {
     console.log('[DEBUG] Getting all groups')
     let groups = await db.from('movies').distinct('group_title')

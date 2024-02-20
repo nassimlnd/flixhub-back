@@ -24,10 +24,10 @@ router.get('/movies/groups/all', [MoviesController, 'getGroups'])
 router
   .get('/movies/groups/:groupTitle', [MoviesController, 'getMoviesByGroup'])
   .use(middleware.auth())
-
 router
   .get('/movies/groups/:groupTitle/:amount', [MoviesController, 'getMoviesByGroupAndAmount'])
   .use(middleware.auth())
+router.get('/movies/random', [MoviesController, 'getRandomMovie']).use(middleware.auth())
 
 router.post('/m3u/upload', [M3UsController, 'upload'])
 

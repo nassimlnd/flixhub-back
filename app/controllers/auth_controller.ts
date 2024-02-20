@@ -37,6 +37,6 @@ export default class AuthController {
   async logout({ auth, response }: HttpContext) {
     console.log('[DEBUG] User ' + auth.user?.email + ' is logging out')
     await auth.use('web').logout()
-    response.json({ message: 'Logged out successfully' })
+    return response.json({ message: 'Logged out successfully' })
   }
 }
