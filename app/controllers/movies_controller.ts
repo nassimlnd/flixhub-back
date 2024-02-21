@@ -82,4 +82,15 @@ export default class MoviesController {
       movies: movies,
     })
   }
+
+  async getMovieById({ request, response, auth }: HttpContext) {
+    const params = request.params()
+    const id = Number.parseInt(params.id)
+    const user = auth.user
+    console.log('[DEBUG] User ' + user?.email + ' is getting movie with id ' + id)
+    let movie = await Movie.find(id)
+    return response.json({
+      movie: movie,
+    })
+  }
 }

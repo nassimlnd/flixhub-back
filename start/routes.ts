@@ -34,6 +34,7 @@ router
   .get('/movies/random/:amount', [MoviesController, 'getRandomMovieByAmount'])
   .use(middleware.auth())
 router.get('/movies/search/:query', [MoviesController, 'searchMovies']).use(middleware.auth())
+router.get('/movies/:id', [MoviesController, 'getMovieById']).use(middleware.auth())
 
 // M3Us routes
 
