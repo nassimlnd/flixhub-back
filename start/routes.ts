@@ -19,6 +19,8 @@ router.get('/', async () => {
   }
 })
 
+// Movies routes
+
 router.get('/movies', [MoviesController, 'getAll']).use(middleware.auth())
 router.get('/movies/groups/all', [MoviesController, 'getGroups'])
 router
@@ -31,8 +33,13 @@ router.get('/movies/random', [MoviesController, 'getRandomMovie']).use(middlewar
 router
   .get('/movies/random/:amount', [MoviesController, 'getRandomMovieByAmount'])
   .use(middleware.auth())
+router.get('/movies/search/:query', [MoviesController, 'searchMovies']).use(middleware.auth())
+
+// M3Us routes
 
 router.post('/m3u/upload', [M3UsController, 'upload'])
+
+// Auth routes
 
 router.post('/auth/register', [AuthController, 'register'])
 router.post('/auth/login', [AuthController, 'login'])

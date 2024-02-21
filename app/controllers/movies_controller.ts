@@ -66,4 +66,19 @@ export default class MoviesController {
       movies: movies,
     })
   }
+
+  async searchMovies({ request, response, auth }: HttpContext) {
+    const params = request.params()
+    const query = decodeURIComponent(params.query)
+    const user = auth.user
+    console.log('[DEBUG] User ' + user?.email + ' is searching for movies with query ' + query)
+
+    let movies = await Movie.query()
+      .where('title', 'like', '%' + query + '%')
+      .limit(25)
+
+    return response.json({
+      movies: movies,
+    })
+  }
 }
