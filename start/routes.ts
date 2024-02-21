@@ -28,6 +28,9 @@ router
   .get('/movies/groups/:groupTitle/:amount', [MoviesController, 'getMoviesByGroupAndAmount'])
   .use(middleware.auth())
 router.get('/movies/random', [MoviesController, 'getRandomMovie']).use(middleware.auth())
+router
+  .get('/movies/random/:amount', [MoviesController, 'getRandomMovieByAmount'])
+  .use(middleware.auth())
 
 router.post('/m3u/upload', [M3UsController, 'upload'])
 

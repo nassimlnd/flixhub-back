@@ -55,4 +55,15 @@ export default class MoviesController {
       groups: groups,
     })
   }
+
+  async getRandomMovieByAmount({ request, response, auth }: HttpContext) {
+    const params = request.params()
+    const amount = Number.parseInt(params.amount)
+    const user = auth.user
+    console.log('[DEBUG] User ' + user?.email + ' is getting ' + amount + ' random movies')
+    let movies = await Movie.query().orderByRaw('RAND()').limit(amount)
+    return response.json({
+      movies: movies,
+    })
+  }
 }
