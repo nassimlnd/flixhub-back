@@ -15,7 +15,8 @@ import { middleware } from './kernel.js'
 
 router.get('/', async () => {
   return {
-    hello: 'world',
+    welcome:
+      'Welcome to the FlixHub API! Made by Nassim LOUNADI. Please check the project on my portfolio: nassimlounadi.fr',
   }
 })
 
