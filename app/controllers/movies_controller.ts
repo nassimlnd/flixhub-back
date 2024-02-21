@@ -69,7 +69,8 @@ export default class MoviesController {
 
   async searchMovies({ request, response, auth }: HttpContext) {
     const params = request.params()
-    const query = decodeURIComponent(params.query)
+    let query = decodeURIComponent(params.query)
+    query = query.replaceAll('+', ' ')
     const user = auth.user
     console.log('[DEBUG] User ' + user?.email + ' is searching for movies with query ' + query)
 
