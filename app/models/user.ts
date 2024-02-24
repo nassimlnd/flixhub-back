@@ -1,10 +1,8 @@
-import Notification from '#models/notification'
 import { DateTime } from 'luxon'
 import { withAuthFinder } from '@adonisjs/auth'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -29,9 +27,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare password: string
-
-  @hasMany(() => Notification)
-  declare notifications: HasMany<typeof Notification>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

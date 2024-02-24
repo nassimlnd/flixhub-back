@@ -10,12 +10,14 @@ export default class NotificationsController {
       return null
     }
 
-    return response.json(user.notifications)
+    const notifications = await Notification.query().where('userId', user.id).exec()
+
+    return response.json(notifications)
   }
 
   async sendNotifications({ request, response }: HttpContext) {
     const params = request.only(['title', 'message', 'userId'])
-    const user = await User.find(params.userId)
+    const user = await User.findOrFail(params.userId)
 
     console.log('Params: ', params)
 
@@ -27,7 +29,7 @@ export default class NotificationsController {
     notification.title = params.title
     notification.message = params.message
 
-    await user.related('notifications').save(notification)
+    await notification.related('user').associate(user)
 
     return response.status(201).json(notification)
   }
