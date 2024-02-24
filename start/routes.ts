@@ -46,6 +46,7 @@ router
 
 router.get('/notifications', [NotificationsController, 'getAll']).use(middleware.auth())
 router.post('/notifications', [NotificationsController, 'sendNotifications'])
+router.post('/notifications/all', [NotificationsController, 'sendNotificationToAll'])
 
 // M3Us routes
 
