@@ -1,5 +1,4 @@
 import User from '#models/user'
-import Notification from '#models/notification'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class NotificationsController {
