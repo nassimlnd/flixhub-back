@@ -10,6 +10,7 @@
 const MoviesController = () => import('#controllers/movies_controller')
 const M3UsController = () => import('#controllers/m_3_us_controller')
 const AuthController = () => import('#controllers/auth_controller')
+const NotificationsController = () => import('#controllers/notifications_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
@@ -22,20 +23,29 @@ router.get('/', async () => {
 
 // Movies routes
 
-router.get('/movies', [MoviesController, 'getAll']).use(middleware.auth())
 router.get('/movies/groups/all', [MoviesController, 'getGroups'])
 router
-  .get('/movies/groups/:groupTitle', [MoviesController, 'getMoviesByGroup'])
+  .group(() => {
+    router.get('/movies', [MoviesController, 'getAll'])
+    router.get('/movies/groups/:groupTitle', [MoviesController, 'getMoviesByGroup'])
+
+    router.get('/movies/groups/:groupTitle/:amount', [
+      MoviesController,
+      'getMoviesByGroupAndAmount',
+    ])
+
+    router.get('/movies/random', [MoviesController, 'getRandomMovie'])
+    router.get('/movies/random/:amount', [MoviesController, 'getRandomMovieByAmount'])
+
+    router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
+    router.get('/movies/:id', [MoviesController, 'getMovieById'])
+  })
   .use(middleware.auth())
-router
-  .get('/movies/groups/:groupTitle/:amount', [MoviesController, 'getMoviesByGroupAndAmount'])
-  .use(middleware.auth())
-router.get('/movies/random', [MoviesController, 'getRandomMovie']).use(middleware.auth())
-router
-  .get('/movies/random/:amount', [MoviesController, 'getRandomMovieByAmount'])
-  .use(middleware.auth())
-router.get('/movies/search/:query', [MoviesController, 'searchMovies']).use(middleware.auth())
-router.get('/movies/:id', [MoviesController, 'getMovieById']).use(middleware.auth())
+
+// Notifications routes
+
+router.get('/notifications', [NotificationsController, 'getAll']).use(middleware.auth())
+router.post('/notifications', [NotificationsController, 'sendNotifications'])
 
 // M3Us routes
 
