@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('message').notNullable()
       table
-        .integer('userId')
+        .integer('user_id')
         .unsigned()
         .references('id')
         .inTable('users')
