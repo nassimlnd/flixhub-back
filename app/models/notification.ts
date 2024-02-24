@@ -16,6 +16,9 @@ export default class Notification extends BaseModel {
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
+  @column()
+  declare userId: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

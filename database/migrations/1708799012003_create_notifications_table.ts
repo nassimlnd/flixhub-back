@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id').primary()
       table.string('title').notNullable()
       table.string('message').notNullable()
+      table.integer('user_id').unsigned().notNullable()
       table
         .integer('user_id')
         .unsigned()
