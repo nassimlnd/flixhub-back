@@ -1,3 +1,4 @@
+import Notification from '#models/notification'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -22,10 +23,11 @@ export default class NotificationsController {
       return response.status(404).json({ message: 'User not found' })
     }
 
-    const notification = await user.related('notifications').create({
-      title: params.title,
-      message: params.message,
-    })
+    const notification = new Notification()
+    notification.title = params.title
+    notification.message = params.message
+
+    await user.related('notifications').save(notification)
 
     return response.status(201).json(notification)
   }
