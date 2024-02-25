@@ -4,7 +4,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class AuthController {
   async register({ request, auth, response }: HttpContext) {
     console.log('Called register')
-    let interests = []
+    let interests: string
 
     const { email, password, fullName, nickname, phoneNumber, haveInterests } = request.only([
       'email',
@@ -16,15 +16,15 @@ export default class AuthController {
     ])
 
     if (haveInterests) {
-      interests = JSON.parse(request.input('interests'))
+      interests = request.input('interests')
     } else {
-      interests = [
+      interests = JSON.stringify([
         'FILMS RÉCEMMENT AJOUTÉS',
         'DOCUMENTAIRES | EMISSION TV',
         'FRANÇAIS',
         'ANIMATION | FAMILIALE | ENFANTS',
         'FANTASTIQUE | AVENTURE',
-      ]
+      ]).toString()
     }
 
     const user = await User.create({ fullName, nickname, phoneNumber, email, password, interests })
