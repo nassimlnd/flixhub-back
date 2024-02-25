@@ -26,6 +26,8 @@ export default class ProfilesController {
 
     const profile = await user.related('profiles').create({ name, avatarId, interests })
 
+    console.log('[DEBUG] User', user?.email, 'created a new profile. (', profile.name, ')')
+
     return response.status(201).json(profile)
   }
 
@@ -37,6 +39,14 @@ export default class ProfilesController {
     }
 
     const profiles = await Profile.query().where('user_id', user.id)
+
+    console.log(
+      '[DEBUG] User',
+      user.email,
+      'requested their profiles. (',
+      profiles.length,
+      'profiles)'
+    )
 
     return response.status(200).json(profiles)
   }
