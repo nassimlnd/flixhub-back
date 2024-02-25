@@ -6,28 +6,9 @@ export default class AuthController {
     console.log('Called register')
     let interests: string
 
-    const { email, password, fullName, nickname, phoneNumber, haveInterests } = request.only([
-      'email',
-      'password',
-      'fullName',
-      'nickname',
-      'phoneNumber',
-      'haveInterests',
-    ])
+    const { email, password, fullName } = request.only(['email', 'password', 'fullName'])
 
-    if (haveInterests) {
-      interests = request.input('interests')
-    } else {
-      interests = JSON.stringify([
-        'FILMS RÉCEMMENT AJOUTÉS',
-        'DOCUMENTAIRES | EMISSION TV',
-        'FRANÇAIS',
-        'ANIMATION | FAMILIALE | ENFANTS',
-        'FANTASTIQUE | AVENTURE',
-      ]).toString()
-    }
-
-    const user = await User.create({ fullName, nickname, phoneNumber, email, password, interests })
+    const user = await User.create({ fullName, email, password })
     await auth.use('web').login(user)
     console.log('User ' + email + ' registered successfully.')
 
