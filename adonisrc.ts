@@ -32,7 +32,8 @@ export default defineConfig({
     () => import('@adonisjs/cors/cors_provider'),
     () => import('@adonisjs/lucid/database_provider'),
     () => import('@adonisjs/session/session_provider'),
-    () => import('@adonisjs/auth/auth_provider')
+    () => import('@adonisjs/auth/auth_provider'),
+    () => import('@adonisjs/static/static_provider'),
   ],
 
   /*
@@ -69,4 +70,19 @@ export default defineConfig({
     ],
     forceExit: false,
   },
+
+  /*
+  |--------------------------------------------------------------------------
+  | Static files
+  |--------------------------------------------------------------------------
+  |
+  | The configuration for the static files.
+  |
+  */
+  metaFiles: [
+    {
+      pattern: 'public/**',
+      reloadServer: false,
+    },
+  ],
 })
