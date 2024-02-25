@@ -24,7 +24,7 @@ export default class ProfilesController {
       ]).toString()
     }
 
-    const profile = await user.related('profiles').create({ name, avatarId })
+    const profile = await user.related('profiles').create({ name, avatarId, interests })
 
     return response.status(201).json(profile)
   }
