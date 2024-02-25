@@ -53,6 +53,7 @@ router.post('/notifications/all', [NotificationsController, 'sendNotificationToA
 
 router.get('/profile', [ProfilesController, 'getProfiles']).use(middleware.auth())
 router.post('/profile', [ProfilesController, 'createProfile']).use(middleware.auth())
+router.post('/profile/delete/:id', [ProfilesController, 'deleteProfile']).use(middleware.auth())
 
 // M3Us routes
 

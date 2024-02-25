@@ -48,4 +48,26 @@ export default class ProfilesController {
 
     return response.status(200).json(profiles)
   }
+
+  async deleteProfile({ auth, request, response }: HttpContext) {
+    const user = auth.user
+    const params = request.params()
+
+    if (!user) {
+      return response.status(401).send('Unauthorized')
+    }
+
+    const profile = await Profile.query()
+      .where('id', params.id)
+      .andWhere('user_id', user.id)
+      .first()
+
+    if (!profile) {
+      return response.status(404).send('Profile not found')
+    }
+
+    console.log('[DEBUG] User', user.email, 'deleted a profile. (', profile.name, ')')
+
+    await profile.delete()
+  }
 }
