@@ -11,6 +11,7 @@ const MoviesController = () => import('#controllers/movies_controller')
 const M3UsController = () => import('#controllers/m_3_us_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const NotificationsController = () => import('#controllers/notifications_controller')
+const ProfilesController = () => import('#controllers/profiles_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
@@ -47,6 +48,11 @@ router
 router.get('/notifications', [NotificationsController, 'getAll']).use(middleware.auth())
 router.post('/notifications', [NotificationsController, 'sendNotifications'])
 router.post('/notifications/all', [NotificationsController, 'sendNotificationToAll'])
+
+// Profile routes
+
+router.get('/profile', [ProfilesController, 'getProfiles']).use(middleware.auth())
+router.post('/profile', [ProfilesController, 'createProfile']).use(middleware.auth())
 
 // M3Us routes
 
