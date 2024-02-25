@@ -11,7 +11,7 @@ export default class Profile extends BaseModel {
   declare name: string
 
   @column()
-  declare avatarId: number
+  declare avatar: number
 
   @column()
   declare interests: string

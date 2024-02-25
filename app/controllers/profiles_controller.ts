@@ -6,7 +6,7 @@ export default class ProfilesController {
     const user = auth.user
     let interests: string
 
-    const { name, avatarId, haveInterests } = request.only(['name', 'avatarId', 'haveInterests'])
+    const { name, avatar, haveInterests } = request.only(['name', 'avatar', 'haveInterests'])
 
     if (!user) {
       return response.status(401).send('Unauthorized')
@@ -24,7 +24,7 @@ export default class ProfilesController {
       ]).toString()
     }
 
-    const profile = await user.related('profiles').create({ name, avatarId, interests })
+    const profile = await user.related('profiles').create({ name, avatar, interests })
 
     console.log('[DEBUG] User', user?.email, 'created a new profile. (', profile.name, ')')
 
@@ -43,9 +43,7 @@ export default class ProfilesController {
     console.log(
       '[DEBUG] User',
       user.email,
-      'requested their profiles. (',
-      profiles.length,
-      'profiles)'
+      'requested their profiles. (' + profiles.length + ' profiles)'
     )
 
     return response.status(200).json(profiles)
