@@ -4,15 +4,30 @@ import type { HttpContext } from '@adonisjs/core/http'
 export default class AuthController {
   async register({ request, auth, response }: HttpContext) {
     console.log('Called register')
+    let interests = []
 
-    const { email, password, fullName, nickname, phoneNumber } = request.only([
+    const { email, password, fullName, nickname, phoneNumber, haveInterests } = request.only([
       'email',
       'password',
       'fullName',
       'nickname',
       'phoneNumber',
+      'haveInterests',
     ])
-    const user = await User.create({ fullName, nickname, phoneNumber, email, password })
+
+    if (haveInterests) {
+      interests = JSON.parse(request.input('interests'))
+    } else {
+      interests = [
+        'FILMS RÉCEMMENT AJOUTÉS',
+        'DOCUMENTAIRES | EMISSION TV',
+        'FRANÇAIS',
+        'ANIMATION | FAMILIALE | ENFANTS',
+        'FANTASTIQUE | AVENTURE',
+      ]
+    }
+
+    const user = await User.create({ fullName, nickname, phoneNumber, email, password, interests })
     await auth.use('web').login(user)
     console.log('User ' + email + ' registered successfully.')
 
