@@ -19,19 +19,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare fullName: string
 
   @column()
-  declare nickname: string
-
-  @column()
-  declare phoneNumber: string
-
-  @column()
   declare email: string
 
   @column()
   declare password: string
-
-  @column()
-  declare interests: string
 
   @hasMany(() => Profile)
   declare profiles: HasMany<typeof Profile>

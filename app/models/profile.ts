@@ -14,6 +14,9 @@ export default class Profile extends BaseModel {
   declare avatarId: number
 
   @column()
+  declare interests: string
+
+  @column()
   declare userId: number
 
   @belongsTo(() => User)
