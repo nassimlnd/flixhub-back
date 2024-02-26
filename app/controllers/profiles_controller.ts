@@ -6,7 +6,12 @@ export default class ProfilesController {
     const user = auth.user
     let interests: string
 
-    const { name, avatar, haveInterests } = request.only(['name', 'avatar', 'haveInterests'])
+    const { name, avatar, birthdate, haveInterests } = request.only([
+      'name',
+      'avatar',
+      'birthdate',
+      'haveInterests',
+    ])
 
     if (!user) {
       return response.status(401).send('Unauthorized')
@@ -24,7 +29,7 @@ export default class ProfilesController {
       ]).toString()
     }
 
-    const profile = await user.related('profiles').create({ name, avatar, interests })
+    const profile = await user.related('profiles').create({ name, avatar, interests, birthdate })
 
     console.log('[DEBUG] User', user?.email, 'created a new profile. (', profile.name, ')')
 
@@ -69,5 +74,39 @@ export default class ProfilesController {
     console.log('[DEBUG] User', user.email, 'deleted a profile. (', profile.name, ')')
 
     await profile.delete()
+  }
+
+  async updateProfile({ auth, request, response }: HttpContext) {
+    const user = auth.user
+    const params = request.params()
+
+    if (!user) {
+      return response.status(401).send('Unauthorized')
+    }
+
+    const profile = await Profile.query()
+      .where('id', params.id)
+      .andWhere('user_id', user.id)
+      .first()
+
+    if (!profile) {
+      return response.status(404).send('Profile not found')
+    }
+
+    const { name, avatar, birthdate, interests } = request.only([
+      'name',
+      'avatar',
+      'birthdate',
+      'interests',
+    ])
+
+    profile.name = name
+    profile.avatar = avatar
+    profile.birthdate = birthdate
+    profile.interests = interests
+
+    await profile.save()
+
+    console.log('[DEBUG] User', user.email, 'updated a profile. (', profile.name, ')')
   }
 }

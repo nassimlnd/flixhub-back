@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('name').notNullable()
       table.string('avatar').notNullable()
       table.string('interests').notNullable()
+      table.string('birthdate').notNullable()
       table
         .integer('user_id')
         .unsigned()
