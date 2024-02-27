@@ -108,5 +108,7 @@ export default class ProfilesController {
     await profile.save()
 
     console.log('[DEBUG] User', user.email, 'updated a profile. (', profile.name, ')')
+
+    return response.status(200).json(profile)
   }
 }
