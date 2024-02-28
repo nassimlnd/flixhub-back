@@ -7,6 +7,8 @@
 |
 */
 
+import ListsController from '#controllers/lists_controller'
+
 const MoviesController = () => import('#controllers/movies_controller')
 const M3UsController = () => import('#controllers/m_3_us_controller')
 const AuthController = () => import('#controllers/auth_controller')
@@ -70,6 +72,8 @@ router
 router
   .get('/profile/:id/interaction/:type', [InteractionsController, 'getInteractionsByType'])
   .use(middleware.auth())
+
+router.get('/profile/:id/list', [ListsController, 'getListById']).use(middleware.auth())
 
 router
   .get('/profile/:id/interaction/:type/:mediaType', [
