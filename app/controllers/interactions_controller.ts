@@ -67,6 +67,8 @@ export default class InteractionsController {
 
     const interactions = await profile.related('interactions').query().preload('profile')
 
+    console.log('[DEBUG] User ', user.email, 'with profile', profile.name, 'fetched interactions')
+
     return response.status(200).json(interactions)
   }
 }
