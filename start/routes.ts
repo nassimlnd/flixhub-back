@@ -71,6 +71,13 @@ router
   .get('/profile/:id/interaction/:type', [InteractionsController, 'getInteractionsByType'])
   .use(middleware.auth())
 
+router
+  .get('/profile/:id/interaction/:type/:mediaType', [
+    InteractionsController,
+    'getByMediaTypeAndInteractionType',
+  ])
+  .use(middleware.auth())
+
 // M3Us routes
 
 router.post('/m3u/upload', [M3UsController, 'upload'])
