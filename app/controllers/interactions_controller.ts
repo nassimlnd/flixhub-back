@@ -81,7 +81,7 @@ export default class InteractionsController {
     }
 
     const profileId = params.id
-    const interactionType = params.interactionType
+    const interactionType = params.type
 
     // Check if profileId is valid and belongs to the user
     const profile = await user.related('profiles').query().where('id', profileId).first()
