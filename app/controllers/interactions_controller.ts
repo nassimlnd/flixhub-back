@@ -47,4 +47,26 @@ export default class InteractionsController {
 
     return response.status(201).json(interaction)
   }
+
+  async getInteractions({ auth, request, response }: HttpContext) {
+    const user = auth.user
+    const params = request.params()
+
+    if (!user) {
+      return response.unauthorized()
+    }
+
+    const profileId = params.id
+
+    // Check if profileId is valid and belongs to the user
+    const profile = await user.related('profiles').query().where('id', profileId).first()
+
+    if (!profile) {
+      return response.notFound('Profile not found')
+    }
+
+    const interactions = await profile.related('interactions').query().preload('profile')
+
+    return response.status(200).json(interactions)
+  }
 }

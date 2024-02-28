@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
+import Interaction from './interaction.js'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -24,6 +25,9 @@ export default class Profile extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+
+  @belongsTo(() => Interaction)
+  declare interactions: BelongsTo<typeof Interaction>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

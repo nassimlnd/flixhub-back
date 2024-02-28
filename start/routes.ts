@@ -12,6 +12,7 @@ const M3UsController = () => import('#controllers/m_3_us_controller')
 const AuthController = () => import('#controllers/auth_controller')
 const NotificationsController = () => import('#controllers/notifications_controller')
 const ProfilesController = () => import('#controllers/profiles_controller')
+const InteractionsController = () => import('#controllers/interactions_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
@@ -55,6 +56,16 @@ router.get('/profile', [ProfilesController, 'getProfiles']).use(middleware.auth(
 router.post('/profile', [ProfilesController, 'createProfile']).use(middleware.auth())
 router.post('/profile/delete/:id', [ProfilesController, 'deleteProfile']).use(middleware.auth())
 router.post('/profile/update/:id', [ProfilesController, 'updateProfile']).use(middleware.auth())
+
+// Interaction routes
+
+router
+  .post('/profile/:id/interaction', [InteractionsController, 'registerInteraction'])
+  .use(middleware.auth())
+
+router
+  .get('/profile/:id/interaction', [InteractionsController, 'getInteractions'])
+  .use(middleware.auth())
 
 // M3Us routes
 
