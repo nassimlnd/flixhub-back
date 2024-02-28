@@ -132,6 +132,7 @@ export default class InteractionsController {
       .query()
       .where('mediaType', mediaType)
       .where('interactionType', interactionType)
+      .orderBy('createdAt', 'desc')
       .preload('profile')
 
     console.log(
