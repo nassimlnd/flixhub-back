@@ -123,7 +123,10 @@ export default class ProfilesController {
       return response.status(404).send('Profile not found')
     }
 
-    Interaction.query().where('profile_id', profile.id).where('interaction_type', 'view').delete()
+    await Interaction.query()
+      .where('profile_id', profile.id)
+      .where('interaction_type', 'view')
+      .delete()
 
     console.log('[DEBUG] User', user.email, 'erased the history of a profile. (', profile.name, ')')
 
