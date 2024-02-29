@@ -1,4 +1,5 @@
 import Movie from '#models/movie'
+import Rating from '#models/rating'
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 
@@ -7,9 +8,19 @@ export default class MoviesController {
     const user = auth.user
     console.log('[DEBUG] User ' + user?.email + ' is getting all movies')
     let movies = await Movie.all()
+
+    movies.forEach((movie) => {
+      let movieRatings = Rating.query().where('media_id', movie.id).where('media_type', 'movie')
+      let averageRating = 
+    })
+
     return response.json({
       movies: movies,
     })
+  }
+
+  async getMovieRating({ request, response, auth }: HttpContext) {
+    
   }
 
   async getMoviesByGroup({ request, response, auth }: HttpContext) {

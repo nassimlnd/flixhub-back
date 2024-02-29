@@ -34,9 +34,15 @@ export function importM3U(file: string) {
           movie.url = line
           movie.tvg_id = currentData[0]
           movie.tvg_name = currentData[1]
-          movie.tvg_logo = currentData[2]
           movie.group_title = currentData[3]
           movie.title = currentData[4]
+
+          if (currentData[2] === 'https://image.tmdb.org/t/p/w600_and_h900_bestv2') {
+            movie.tvg_logo = ''
+          } else {
+            movie.tvg_logo = currentData[2]
+          }
+
           movieList.push(movie)
           movie.save()
           currentData = []
@@ -45,9 +51,15 @@ export function importM3U(file: string) {
           serie.url = line
           serie.tvg_id = currentData[0]
           serie.tvg_name = currentData[1]
-          serie.tvg_logo = currentData[2]
           serie.group_title = currentData[3]
           serie.title = currentData[4]
+
+          if (currentData[2] === 'https://image.tmdb.org/t/p/w600_and_h900_bestv2') {
+            serie.tvg_logo = ''
+          } else {
+            serie.tvg_logo = currentData[2]
+          }
+
           serieList.push(serie)
 
           currentData = []
@@ -56,10 +68,17 @@ export function importM3U(file: string) {
           tvShow.url = line
           tvShow.tvg_id = currentData[0]
           tvShow.tvg_name = currentData[1]
-          tvShow.tvg_logo = currentData[2]
           tvShow.group_title = currentData[3]
           tvShow.title = currentData[4]
+
+          if (currentData[2] === '') {
+            tvShow.tvg_logo = ''
+          } else {
+            tvShow.tvg_logo = currentData[2]
+          }
+
           tvShowList.push(tvShow)
+          tvShow.save()
 
           currentData = []
         }

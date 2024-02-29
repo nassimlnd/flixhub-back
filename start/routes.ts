@@ -7,8 +7,8 @@
 |
 */
 
-import ListsController from '#controllers/lists_controller'
-
+const ListsController = () => import('#controllers/lists_controller')
+const RatingsController = () => import('#controllers/ratings_controller')
 const MoviesController = () => import('#controllers/movies_controller')
 const M3UsController = () => import('#controllers/m_3_us_controller')
 const AuthController = () => import('#controllers/auth_controller')
@@ -56,8 +56,11 @@ router.post('/notifications/all', [NotificationsController, 'sendNotificationToA
 
 router.get('/profile', [ProfilesController, 'getProfiles']).use(middleware.auth())
 router.post('/profile', [ProfilesController, 'createProfile']).use(middleware.auth())
-router.post('/profile/delete/:id', [ProfilesController, 'deleteProfile']).use(middleware.auth())
-router.post('/profile/update/:id', [ProfilesController, 'updateProfile']).use(middleware.auth())
+router.post('/profile/delete', [ProfilesController, 'deleteProfile']).use(middleware.auth())
+router.post('/profile/update', [ProfilesController, 'updateProfile']).use(middleware.auth())
+router
+  .post('/profile/history/remove', [ProfilesController, 'eraseProfileHistory'])
+  .use(middleware.auth())
 
 // Interaction routes
 
@@ -73,14 +76,20 @@ router
   .get('/profile/:id/interaction/:type', [InteractionsController, 'getInteractionsByType'])
   .use(middleware.auth())
 
-router.get('/profile/:id/list', [ListsController, 'getListById']).use(middleware.auth())
-
 router
   .get('/profile/:id/interaction/:type/:mediaType', [
     InteractionsController,
     'getByMediaTypeAndInteractionType',
   ])
   .use(middleware.auth())
+
+// List routes
+
+router.get('/profile/:id/list', [ListsController, 'getListById']).use(middleware.auth())
+
+// Rating routes
+
+router.post('/rating', [RatingsController, 'registerRating']).use(middleware.auth())
 
 // M3Us routes
 

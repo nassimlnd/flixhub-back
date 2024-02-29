@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Profile from '#models/profile'
+import Interaction from '#models/interaction'
 
 export default class ProfilesController {
   async createProfile({ auth, request, response }: HttpContext) {
@@ -56,16 +57,14 @@ export default class ProfilesController {
 
   async deleteProfile({ auth, request, response }: HttpContext) {
     const user = auth.user
-    const params = request.params()
+
+    const { id } = request.only(['id'])
 
     if (!user) {
       return response.status(401).send('Unauthorized')
     }
 
-    const profile = await Profile.query()
-      .where('id', params.id)
-      .andWhere('user_id', user.id)
-      .first()
+    const profile = await Profile.query().where('id', id).andWhere('user_id', user.id).first()
 
     if (!profile) {
       return response.status(404).send('Profile not found')
@@ -78,27 +77,24 @@ export default class ProfilesController {
 
   async updateProfile({ auth, request, response }: HttpContext) {
     const user = auth.user
-    const params = request.params()
 
-    if (!user) {
-      return response.status(401).send('Unauthorized')
-    }
-
-    const profile = await Profile.query()
-      .where('id', params.id)
-      .andWhere('user_id', user.id)
-      .first()
-
-    if (!profile) {
-      return response.status(404).send('Profile not found')
-    }
-
-    const { name, avatar, birthdate, interests } = request.only([
+    const { id, name, avatar, birthdate, interests } = request.only([
+      'id',
       'name',
       'avatar',
       'birthdate',
       'interests',
     ])
+
+    if (!user) {
+      return response.status(401).send('Unauthorized')
+    }
+
+    const profile = await Profile.query().where('id', id).andWhere('user_id', user.id).first()
+
+    if (!profile) {
+      return response.status(404).send('Profile not found')
+    }
 
     profile.name = name
     profile.avatar = avatar
@@ -108,6 +104,28 @@ export default class ProfilesController {
     await profile.save()
 
     console.log('[DEBUG] User', user.email, 'updated a profile. (', profile.name, ')')
+
+    return response.status(200).json(profile)
+  }
+
+  async eraseProfileHistory({ auth, request, response }: HttpContext) {
+    const user = auth.user
+
+    const { id } = request.only(['id'])
+
+    if (!user) {
+      return response.status(401).send('Unauthorized')
+    }
+
+    const profile = await Profile.query().where('id', id).andWhere('user_id', user.id).first()
+
+    if (!profile) {
+      return response.status(404).send('Profile not found')
+    }
+
+    Interaction.query().where('profile_id', profile.id).where('interaction_type', 'view').delete()
+
+    console.log('[DEBUG] User', user.email, 'erased the history of a profile. (', profile.name, ')')
 
     return response.status(200).json(profile)
   }
