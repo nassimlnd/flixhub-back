@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import Season from '#models/season'
 
-export default class Serie extends BaseModel {
+export default class Episode extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -10,10 +9,19 @@ export default class Serie extends BaseModel {
   declare title: string
 
   @column()
+  declare tvg_id: string
+
+  @column()
+  declare tvg_name: string
+
+  @column()
   declare tvg_logo: string
 
   @column()
-  declare seasons: Array<Season>
+  declare group_title: string
+
+  @column()
+  declare url: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

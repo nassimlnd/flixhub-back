@@ -56,11 +56,6 @@ export async function importM3U(file: string) {
           currentData = []
         } else if (line.includes('serie')) {
           const serie = new Serie()
-          serie.url = line
-          serie.tvg_id = currentData[0]
-          serie.tvg_name = currentData[1]
-          serie.group_title = currentData[3]
-          serie.title = currentData[4]
 
           if (currentData[2] === 'https://image.tmdb.org/t/p/w600_and_h900_bestv2') {
             serie.tvg_logo = ''
