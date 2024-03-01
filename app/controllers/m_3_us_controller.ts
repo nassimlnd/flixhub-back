@@ -14,6 +14,6 @@ export default class M3UsController {
     if (file === undefined) {
       return response.badRequest('Invalid file')
     }
-    importM3U(file)
+    await importM3U(file)
   }
 }

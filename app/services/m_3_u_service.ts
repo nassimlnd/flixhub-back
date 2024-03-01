@@ -4,7 +4,7 @@ import TvShow from '#models/tv_show'
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import { createReadStream } from 'node:fs'
 
-export function importM3U(file: string) {
+export async function importM3U(file: string) {
   console.log('Start of importM3U function')
   const lines = file.split('\n')
 
@@ -43,8 +43,16 @@ export function importM3U(file: string) {
             movie.tvg_logo = currentData[2]
           }
 
-          movieList.push(movie)
-          movie.save()
+          let currentMovie = await Movie.query().where('tvg_name', movie.tvg_name).first()
+
+          if (currentMovie !== null) {
+            currentMovie.url = movie.url
+            currentMovie.save()
+          } else {
+            movieList.push(movie)
+            movie.save()
+          }
+
           currentData = []
         } else if (line.includes('serie')) {
           const serie = new Serie()
