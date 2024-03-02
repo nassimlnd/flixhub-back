@@ -11,7 +11,7 @@ export const ProfileFactory = factory
       interests: JSON.stringify(
         await db.from('movies').distinct('group_title').orderByRaw('RAND()').limit(10)
       ),
-      userId: await db.from('users').select('id').orderByRaw('RAND()').first(),
+      userId: 1,
     }
   })
   .build()
