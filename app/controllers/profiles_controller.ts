@@ -136,7 +136,7 @@ export default class ProfilesController {
 
   async testRecommandation({ response }: HttpContext) {
     const user1 = await Profile.query().where('id', 1).first()
-    const user2 = await Profile.query().where('id', 2).first()
+    const user2 = await Profile.query().where('id', 8).first()
 
     if (!user1 || !user2) {
       return response.status(404).send('Profiles not found')
