@@ -100,3 +100,7 @@ router.post('/m3u/upload', [M3UsController, 'upload'])
 router.post('/auth/register', [AuthController, 'register'])
 router.post('/auth/login', [AuthController, 'login'])
 router.post('/auth/logout', [AuthController, 'logout'])
+
+// Recommendation routes
+
+router.get('/recommendation', [ProfilesController, 'testRecommandation'])

@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Profile from '#models/profile'
 import Interaction from '#models/interaction'
+import { userSimilarity } from '#services/recommandation_service'
 
 export default class ProfilesController {
   async createProfile({ auth, request, response }: HttpContext) {
@@ -131,5 +132,18 @@ export default class ProfilesController {
     console.log('[DEBUG] User', user.email, 'erased the history of a profile. (', profile.name, ')')
 
     return response.status(200).json(profile)
+  }
+
+  async testRecommandation({ response }: HttpContext) {
+    const user1 = await Profile.query().where('id', 1).first()
+    const user2 = await Profile.query().where('id', 2).first()
+
+    if (!user1 || !user2) {
+      return response.status(404).send('Profiles not found')
+    }
+
+    const similarity = await userSimilarity(user1, user2)
+
+    console.log('Similarity between', user1.name, 'and', user2.name, ':', similarity)
   }
 }
