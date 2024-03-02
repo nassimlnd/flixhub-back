@@ -12,6 +12,7 @@ export const ProfileFactory = factory
     let interestsString = JSON.stringify(interestsArray)
 
     let id = await db.from('users').select('id').orderByRaw('RAND()').first()
+    let profileCount = await db.from('profiles').count('id as count').where('id', id.id).first()
 
     return {
       avatar: 'avatar1.png',
