@@ -5,11 +5,11 @@ import db from '@adonisjs/lucid/services/db'
 export async function userSimilarity(user1: Profile, user2: Profile) {
   // Récupération des historiques de visualisation des deux utilisateurs
   let user1History = await Interaction.query()
-    .where('user_id', user1.id)
+    .where('profile_id', user1.id)
     .where('interaction_type', 'view')
 
   let user2History = await Interaction.query()
-    .where('user_id', user2.id)
+    .where('profile_id', user2.id)
     .where('interaction_type', 'view')
 
   // Récupération des films en commun entre les deux utilisateurs
