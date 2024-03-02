@@ -12,7 +12,7 @@ export default class Profile extends BaseModel {
   declare name: string
 
   @column()
-  declare avatar: number
+  declare avatar: string
 
   @column()
   declare birthdate: string
