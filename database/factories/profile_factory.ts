@@ -4,14 +4,21 @@ import db from '@adonisjs/lucid/services/db'
 
 export const ProfileFactory = factory
   .define(Profile, async ({ faker }) => {
+    let interests = await db.from('movies').distinct('group_title').orderByRaw('RAND()').limit(10)
+    let interestsArray = []
+    for (let interest of interests) {
+      interestsArray.push(interest.group_title)
+    }
+    let interestsString = JSON.stringify(interestsArray)
+
+    let id = await db.from('users').select('id').orderByRaw('RAND()').first()
+
     return {
       avatar: 'avatar1.png',
       name: faker.person.firstName(),
       birthdate: faker.date.past().toString(),
-      interests: JSON.stringify(
-        await db.from('movies').distinct('group_title').orderByRaw('RAND()').limit(10)
-      ),
-      userId: 1,
+      interests: interestsString,
+      userId: id.id,
     }
   })
   .build()
