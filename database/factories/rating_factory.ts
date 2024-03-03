@@ -15,7 +15,7 @@ export const RatingFactory = factory
     let rating = faker.number.int({ min: 1, max: 5 })
 
     return {
-      mediaId: movieId,
+      mediaId: movieId.id,
       profileId: profileId.id,
       rating: rating,
       mediaType: 'movie',
