@@ -8,5 +8,8 @@ export default class extends BaseSeeder {
 
     let profiles = await ProfileFactory.createMany(1000)
     let ratings = await RatingFactory.createMany(10000)
+
+    console.log('Profiles created:', profiles.length)
+    console.log('Ratings created:', ratings.length)
   }
 }
