@@ -1,5 +1,4 @@
 import { InteractionFactory } from '#database/factories/interaction_factory'
-import { ProfileFactory } from '#database/factories/profile_factory'
 import { RatingFactory } from '#database/factories/rating_factory'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
