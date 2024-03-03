@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.integer('profile_id').unsigned().references('profiles.id').onDelete('CASCADE')
       table.integer('media_id').unsigned()
       table.string('media_type', 10)
+      table.float('rating', 2, 1)
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
