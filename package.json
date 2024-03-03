@@ -58,6 +58,7 @@
     "@adonisjs/session": "^7.1.1",
     "@adonisjs/static": "^1.1.1",
     "@vinejs/vine": "^1.7.1",
+    "axios": "^1.6.7",
     "luxon": "^3.4.4",
     "mysql2": "^3.9.1",
     "reflect-metadata": "^0.2.1"
