@@ -4,14 +4,15 @@ import db from '@adonisjs/lucid/services/db'
 
 export const RatingFactory = factory
   .define(Rating, async ({ faker }) => {
-    let groupTitle = await db.from('movies').select('group_title').orderByRaw('RAND()').first()
+    let profileId = await db.from('profiles').select('id').orderByRaw('RAND()').first()
+
     let movieId = await db
-      .from('movies')
-      .select('id')
-      .where('group_title', groupTitle.group_title)
+      .from('interactions')
+      .select('media_id')
+      .where('profile_id', profileId.id)
       .orderByRaw('RAND()')
       .first()
-    let profileId = await db.from('profiles').select('id').orderByRaw('RAND()').first()
+
     let rating = faker.number.int({ min: 1, max: 5 })
 
     return {
