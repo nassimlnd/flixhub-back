@@ -87,6 +87,10 @@ router
 
 router.get('/profile/:id/list', [ListsController, 'getListById']).use(middleware.auth())
 
+router.post('/profile/:id/list/delete', [ListsController, 'deleteMovie']).use(middleware.auth())
+
+router.post('/profile/:id/list/add', [ListsController, 'addMovie']).use(middleware.auth())
+
 // Rating routes
 
 router.post('/rating', [RatingsController, 'registerRating']).use(middleware.auth())
