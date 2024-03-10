@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('stream_id').notNullable()
       table.string('poster').nullable()
-      table.string('category_id').notNullable()
+      table.integer('category_id').notNullable()
       table.string('tmdb_id').notNullable()
       table.string('url').notNullable()
       table.timestamp('created_at').notNullable()

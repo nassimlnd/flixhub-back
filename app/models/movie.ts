@@ -15,7 +15,7 @@ export default class Movie extends BaseModel {
   declare poster: string
 
   @column()
-  declare category_id: string
+  declare category_id: number
 
   @column()
   declare url: string
