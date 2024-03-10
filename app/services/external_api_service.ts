@@ -148,6 +148,8 @@ export async function importSeries() {
   params.append('password', PASSWORD)
   params.append('action', 'get_series')
 
+  const startTime = Date.now()
+
   const response = await axios.post(API_URL, params, config)
 
   if (response.status !== 200) {
@@ -234,7 +236,10 @@ export async function importSeries() {
     count++
   }
 
+  const endTime = Date.now()
+
   console.log('[DB]', count, 'series imported')
+  console.log('[DB] Import took', endTime - startTime, 'ms')
 }
 
 export async function getSerieInfo(serie_id: number) {
