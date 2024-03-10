@@ -159,6 +159,7 @@ export async function importSeries() {
   const series = await response.data
 
   let count = 0
+  let episodeCount = 0
 
   for (const serieJson of series) {
     await Serie.updateOrCreate(
@@ -229,6 +230,7 @@ export async function importSeries() {
                 episode.container_extension,
             }
           )
+          episodeCount++
         }
       }
     }
@@ -239,6 +241,7 @@ export async function importSeries() {
   const endTime = Date.now()
 
   console.log('[DB]', count, 'series imported')
+  console.log('[DB]', episodeCount, 'episodes imported')
   console.log('[DB] Import took', endTime - startTime, 'ms')
 }
 
