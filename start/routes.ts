@@ -31,11 +31,11 @@ router.get('/', async () => {
 router
   .group(() => {
     router.get('/movies', [MoviesController, 'getAll'])
-    router.get('/movies/groups/:groupTitle', [MoviesController, 'getMoviesByGroup'])
+    router.get('/movies/category/:categoryName', [MoviesController, 'getMoviesByCategory'])
 
-    router.get('/movies/groups/:groupTitle/:amount', [
+    router.get('/movies/groucategoryps/:categoryName/:amount', [
       MoviesController,
-      'getMoviesByGroupAndAmount',
+      'getMoviesByCategoryAndAmount',
     ])
 
     router.get('/movies/random', [MoviesController, 'getRandomMovie'])

@@ -9,48 +9,99 @@ export default class MoviesController {
     console.log('[DEBUG] User ' + user?.email + ' is getting all movies')
     let movies = await Movie.all()
 
-    return response.json({
-      movies: movies,
-    })
+    return response.json(movies)
   }
 
-  async getMoviesByGroup({ request, response, auth }: HttpContext) {
+  async getMoviesByCategory({ request, response, auth }: HttpContext) {
     const params = request.params()
-    let groupTitle = decodeURIComponent(params.groupTitle)
-    groupTitle = groupTitle.replaceAll('+', ' ')
-    const user = auth.user
-    console.log('[DEBUG] User ' + user?.email + ' is getting all movies by group ' + groupTitle)
-    let movies = await Movie.query().where('group_title', groupTitle)
-    return response.json({
-      movies: movies,
-    })
-  }
 
-  async getMoviesByGroupAndAmount({ request, response, auth }: HttpContext) {
-    const params = request.params()
-    let groupTitle = decodeURIComponent(params.groupTitle)
-    groupTitle = groupTitle.replaceAll('+', ' ')
-    const amount = Number.parseInt(params.amount)
+    let categoryName = decodeURIComponent(params.categoryName)
+    categoryName = categoryName.replaceAll('+', ' ')
+
     const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    const movieCategory = await MovieCategory.findBy('name', categoryName)
+
+    if (!movieCategory) {
+      return response.status(404).json({
+        message: 'Category not found',
+      })
+    }
+
     console.log(
-      '[DEBUG] User ' + user?.email + ' is getting ' + amount + ' movies by group ' + groupTitle
+      '[DEBUG] User ' + user?.email + ' is getting all movies by category ' + categoryName
     )
-    let movies = await Movie.query().where('group_title', groupTitle).limit(amount)
-    return response.json({
-      movies: movies,
-    })
+
+    let movies = await Movie.query().where('category_id', movieCategory.id)
+
+    return response.json(movies)
+  }
+
+  async getMoviesByCategoryAndAmount({ request, response, auth }: HttpContext) {
+    const params = request.params()
+
+    let categoryName = decodeURIComponent(params.categoryName)
+    categoryName = categoryName.replaceAll('+', ' ')
+    const amount = Number.parseInt(params.amount)
+
+    const user = auth.user
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    const movieCategory = await MovieCategory.findBy('name', categoryName)
+
+    if (!movieCategory) {
+      return response.status(404).json({
+        message: 'Category not found',
+      })
+    }
+
+    console.log(
+      '[DEBUG] User ' +
+        user?.email +
+        ' is getting ' +
+        amount +
+        ' movies by category ' +
+        categoryName
+    )
+
+    let movies = await Movie.query().where('category_id', movieCategory.id).limit(amount)
+    return response.json(movies)
   }
 
   async getRandomMovie({ response, auth }: HttpContext) {
     const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
     console.log('[DEBUG] User ' + user?.email + ' is getting a random movie')
+
     let movie = await Movie.query().orderByRaw('RAND()').limit(1)
-    return response.json({
-      movie: movie,
-    })
+    return response.json(movie)
   }
 
-  async getCategories({ response }: HttpContext) {
+  async getCategories({ auth, response }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
     console.log('[DEBUG] Getting movie categories')
     let categories = await MovieCategory.all()
     return response.json(categories)
@@ -62,9 +113,7 @@ export default class MoviesController {
     const user = auth.user
     console.log('[DEBUG] User ' + user?.email + ' is getting ' + amount + ' random movies')
     let movies = await Movie.query().orderByRaw('RAND()').limit(amount)
-    return response.json({
-      movies: movies,
-    })
+    return response.json(movies)
   }
 
   async searchMovies({ request, response, auth }: HttpContext) {
@@ -78,9 +127,7 @@ export default class MoviesController {
       .where('title', 'like', '%' + query + '%')
       .limit(25)
 
-    return response.json({
-      movies: movies,
-    })
+    return response.json(movies)
   }
 
   async getMovieById({ request, response, auth }: HttpContext) {
@@ -89,9 +136,7 @@ export default class MoviesController {
     const user = auth.user
     console.log('[DEBUG] User ' + user?.email + ' is getting movie with id ' + id)
     let movie = await Movie.find(id)
-    return response.json({
-      movie: movie,
-    })
+    return response.json(movie)
   }
 
   async updateMovies({ auth, response }: HttpContext) {
