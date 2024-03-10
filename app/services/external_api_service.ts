@@ -244,13 +244,21 @@ export async function getSerieInfo(serie_id: number) {
   params.append('action', 'get_series_info')
   params.append('series_id', serie_id.toString())
 
-  const response = await axios.post(API_URL, params, config)
+  let done = false
 
-  if (response.status !== 200) {
-    return null
+  try {
+    while (!done) {
+      const response = await axios.post(API_URL, params, config)
+
+      if (response.status === 200) {
+        done = true
+      }
+
+      const series = await response.data
+
+      return series
+    }
+  } catch (error) {
+    console.log(error)
   }
-
-  const series = await response.data
-
-  return series
 }
