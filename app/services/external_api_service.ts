@@ -66,7 +66,7 @@ export async function importMovies() {
   let count = 0
 
   for (const movieJson of movies) {
-    const movie = await Movie.updateOrCreate(
+    await Movie.updateOrCreate(
       {
         title: movieJson.name,
         stream_id: movieJson.stream_id,
@@ -92,7 +92,7 @@ export async function importMovies() {
     )
     count++
 
-    console.log('[DB] Imported movie ' + movie.title)
+    //console.log('[DB] Imported movie ' + movie.title)
   }
 
   console.log('[DB]', count, 'Movies imported')
