@@ -43,9 +43,9 @@ router
 
     router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
     router.get('/movies/update', [MoviesController, 'updateMovies'])
-    router.get('/movies/:id', [MoviesController, 'getMovieById'])
-
     router.get('/movies/categories', [MoviesController, 'getCategories'])
+
+    router.get('/movies/:id', [MoviesController, 'getMovieById'])
   })
   .use(middleware.auth())
 
