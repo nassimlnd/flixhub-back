@@ -111,6 +111,13 @@ export default class MoviesController {
     const params = request.params()
     const amount = Number.parseInt(params.amount)
     const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
     console.log('[DEBUG] User ' + user?.email + ' is getting ' + amount + ' random movies')
     let movies = await Movie.query().orderByRaw('RAND()').limit(amount)
     return response.json(movies)
@@ -120,7 +127,14 @@ export default class MoviesController {
     const params = request.params()
     let query = decodeURIComponent(params.query)
     query = query.replaceAll('+', ' ')
+
     const user = auth.user
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
     console.log('[DEBUG] User ' + user?.email + ' is searching for movies with query ' + query)
 
     let movies = await Movie.query()
@@ -134,6 +148,13 @@ export default class MoviesController {
     const params = request.params()
     const id = Number.parseInt(params.id)
     const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
     console.log('[DEBUG] User ' + user?.email + ' is getting movie with id ' + id)
     let movie = await Movie.find(id)
     return response.json(movie)
