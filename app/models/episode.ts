@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import Season from './season.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Episode extends BaseModel {
   @column({ isPrimary: true })
@@ -9,16 +11,10 @@ export default class Episode extends BaseModel {
   declare title: string
 
   @column()
-  declare tvg_id: string
+  declare episode_num: number
 
-  @column()
-  declare tvg_name: string
-
-  @column()
-  declare tvg_logo: string
-
-  @column()
-  declare group_title: string
+  @belongsTo(() => Season)
+  declare season_id: BelongsTo<typeof Season>
 
   @column()
   declare url: string

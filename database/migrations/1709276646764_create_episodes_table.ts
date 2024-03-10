@@ -7,12 +7,9 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('title').notNullable()
-      table.string('tvg_id').notNullable()
-      table.string('tvg_name').notNullable()
-      table.string('tvg_logo').notNullable()
-      table.string('group_title').notNullable()
+      table.integer('episode_num').notNullable()
+      table.integer('season_id').references('id').inTable('seasons').notNullable()
       table.string('url').notNullable()
-
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
     })

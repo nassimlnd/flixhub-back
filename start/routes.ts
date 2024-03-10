@@ -15,6 +15,7 @@ const AuthController = () => import('#controllers/auth_controller')
 const NotificationsController = () => import('#controllers/notifications_controller')
 const ProfilesController = () => import('#controllers/profiles_controller')
 const InteractionsController = () => import('#controllers/interactions_controller')
+const SeriesController = () => import('#controllers/series_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
@@ -44,6 +45,14 @@ router
     router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
     router.get('/movies/update', [MoviesController, 'updateMovies'])
     router.get('/movies/:id', [MoviesController, 'getMovieById'])
+  })
+  .use(middleware.auth())
+
+// Series routes
+
+router
+  .group(() => {
+    router.get('/series/update', [SeriesController, 'importSeries'])
   })
   .use(middleware.auth())
 

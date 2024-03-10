@@ -1,5 +1,6 @@
 import Movie from '#models/movie'
 import MovieCategory from '#models/movie_category'
+import SerieCategory from '#models/serie_category'
 import env from '#start/env'
 import axios from 'axios'
 
@@ -32,8 +33,10 @@ export async function importMovieCategories() {
 
   console.log('[DB] Importing movie categories')
 
+  let count = 0
+
   for (const category of categories) {
-    const movieCategory = await MovieCategory.firstOrCreate(
+    await MovieCategory.updateOrCreate(
       {
         id: category.category_id,
         name: category.category_name,
@@ -43,8 +46,12 @@ export async function importMovieCategories() {
         name: category.category_name,
       }
     )
-    console.log('[DB] Imported movie category ' + movieCategory.name)
+
+    count++
+    //console.log('[DB] Imported movie category ' + movieCategory.name)
   }
+
+  console.log('[DB]', count, 'movie categories imported')
 }
 
 export async function importMovies() {
@@ -95,5 +102,40 @@ export async function importMovies() {
     //console.log('[DB] Imported movie ' + movie.title)
   }
 
-  console.log('[DB]', count, 'Movies imported')
+  console.log('[DB]', count, 'movies imported')
+}
+
+export async function importSerieCategories() {
+  let params = new URLSearchParams()
+  params.append('username', USERNAME)
+  params.append('password', PASSWORD)
+  params.append('action', 'get_series_categories')
+
+  const response = await axios.post(API_URL, params, config)
+
+  if (response.status !== 200) {
+    return null
+  }
+
+  const categories = await response.data
+
+  console.log('[DB] Importing serie categories')
+
+  let count = 0
+  for (const category of categories) {
+    await SerieCategory.updateOrCreate(
+      {
+        id: category.category_id,
+        name: category.category_name,
+      },
+      {
+        id: category.category_id,
+        name: category.category_name,
+      }
+    )
+    count++
+    //console.log('[DB] Imported serie category ' + serieCategory.name)
+  }
+
+  console.log('[DB]', count, 'serie categories imported')
 }
