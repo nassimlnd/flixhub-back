@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('title').notNullable()
       table.string('poster').notNullable()
-      table.integer('category_id').notNullable()
+      table.integer('category_id').notNullable().defaultTo(0)
       table.integer('serie_id').unique().notNullable()
       table.integer('tmdb_id').notNullable()
       table.timestamp('created_at').notNullable()
