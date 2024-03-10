@@ -1,4 +1,4 @@
-import { importSerieCategories } from '#services/external_api_service'
+import { importSerieCategories, importSeries } from '#services/external_api_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SeriesController {
@@ -13,5 +13,11 @@ export default class SeriesController {
     console.log('[DB] User ' + user?.email + ' is updating series')
 
     importSerieCategories()
+
+    importSeries()
+
+    return response.status(200).json({
+      message: 'Series updated',
+    })
   }
 }
