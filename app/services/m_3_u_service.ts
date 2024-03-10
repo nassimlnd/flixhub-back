@@ -32,18 +32,17 @@ export async function importM3U(file: string) {
         if (line.includes('movie')) {
           const movie = new Movie()
           movie.url = line
-          movie.tvg_id = currentData[0]
-          movie.tvg_name = currentData[1]
-          movie.group_title = currentData[3]
+          movie.title = currentData[1]
+          //movie.group_title = currentData[3]
           movie.title = currentData[4]
 
           if (currentData[2] === 'https://image.tmdb.org/t/p/w600_and_h900_bestv2') {
-            movie.tvg_logo = ''
+            movie.poster = ''
           } else {
-            movie.tvg_logo = currentData[2]
+            movie.poster = currentData[2]
           }
 
-          let currentMovie = await Movie.query().where('tvg_name', movie.tvg_name).first()
+          let currentMovie = await Movie.query().where('title', movie.title).first()
 
           if (currentMovie !== null) {
             currentMovie.url = movie.url
