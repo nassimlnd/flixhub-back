@@ -28,7 +28,6 @@ router.get('/', async () => {
 
 // Movies routes
 
-router.get('/movies/groups/all', [MoviesController, 'getGroups'])
 router
   .group(() => {
     router.get('/movies', [MoviesController, 'getAll'])
@@ -45,6 +44,8 @@ router
     router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
     router.get('/movies/update', [MoviesController, 'updateMovies'])
     router.get('/movies/:id', [MoviesController, 'getMovieById'])
+
+    router.get('/movies/categories', [MoviesController, 'getCategories'])
   })
   .use(middleware.auth())
 

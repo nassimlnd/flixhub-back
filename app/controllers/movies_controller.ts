@@ -1,7 +1,7 @@
 import Movie from '#models/movie'
+import MovieCategory from '#models/movie_category'
 import { importMovieCategories, importMovies } from '#services/external_api_service'
 import type { HttpContext } from '@adonisjs/core/http'
-import db from '@adonisjs/lucid/services/db'
 
 export default class MoviesController {
   async getAll({ response, auth }: HttpContext) {
@@ -50,12 +50,10 @@ export default class MoviesController {
     })
   }
 
-  async getGroups({ response }: HttpContext) {
-    console.log('[DEBUG] Getting all groups')
-    let groups = await db.from('movies').distinct('group_title')
-    return response.json({
-      groups: groups,
-    })
+  async getCategories({ response }: HttpContext) {
+    console.log('[DEBUG] Getting movie categories')
+    let categories = await MovieCategory.all()
+    return response.json(categories)
   }
 
   async getRandomMovieByAmount({ request, response, auth }: HttpContext) {
