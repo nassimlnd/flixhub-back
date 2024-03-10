@@ -89,6 +89,10 @@ export async function importMovies() {
       }
     )
 
-    console.log('[DB] Imported movie ' + movie.title)
+    //console.log('[DB] Imported movie ' + movie.title)
   }
+
+  const count = await Movie.query().count('* as count').first()
+
+  console.log('[DB]', count, 'Movies imported')
 }
