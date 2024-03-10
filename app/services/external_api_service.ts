@@ -63,6 +63,8 @@ export async function importMovies() {
 
   console.log('[DB] Importing movies')
 
+  let count = 0
+
   for (const movieJson of movies) {
     const movie = await Movie.updateOrCreate(
       {
@@ -88,11 +90,10 @@ export async function importMovies() {
           movieJson.container_extension,
       }
     )
+    count++
 
-    //console.log('[DB] Imported movie ' + movie.title)
+    console.log('[DB] Imported movie ' + movie.title)
   }
-
-  const count = await Movie.query().count('* as count').first()
 
   console.log('[DB]', count, 'Movies imported')
 }
