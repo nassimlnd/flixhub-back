@@ -266,7 +266,7 @@ export async function getSerieInfo(serie_id: number) {
 
       return series
     } catch (error) {
-      console.log('Error getting serie info', serie_id, 'retrying...')
+      console.log('[DB] Error getting serie info', serie_id, 'retrying...')
     }
   }
 }
