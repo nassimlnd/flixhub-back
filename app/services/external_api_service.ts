@@ -1,5 +1,8 @@
+import Episode from '#models/episode'
 import Movie from '#models/movie'
 import MovieCategory from '#models/movie_category'
+import Season from '#models/season'
+import Serie from '#models/serie'
 import SerieCategory from '#models/serie_category'
 import env from '#start/env'
 import axios from 'axios'
@@ -138,4 +141,113 @@ export async function importSerieCategories() {
   }
 
   console.log('[DB]', count, 'serie categories imported')
+}
+
+export async function importSeries() {
+  let params = new URLSearchParams()
+  params.append('username', USERNAME)
+  params.append('password', PASSWORD)
+  params.append('action', 'get_series')
+
+  const response = await axios.post(API_URL, params, config)
+
+  if (response.status !== 200) {
+    return null
+  }
+
+  const series = await response.data
+
+  let count = 0
+
+  for (const serieJson of series) {
+    await Serie.updateOrCreate(
+      {
+        title: serieJson.name,
+        serie_id: serieJson.series_id,
+      },
+      {
+        title: serieJson.name,
+        serie_id: serieJson.series_id,
+        poster: serieJson.cover,
+        category_id: serieJson.category_id,
+        tmdb_id: serieJson.tmdb,
+      }
+    )
+
+    const serieData = await getSerieInfo(serieJson.series_id)
+
+    if (serieData) {
+      for (const season of serieData.seasons) {
+        await Season.updateOrCreate(
+          {
+            serie_id: serieJson.series_id,
+            season_number: serieData.seasons.indexOf(season) + 1,
+          },
+          {
+            serie_id: serieJson.series_id,
+            season_number: season.season,
+            poster: season.cover_tmdb,
+          }
+        )
+      }
+
+      for (const seasonNumber in serieData.episodes) {
+        let episodes = serieData.episodes[seasonNumber]
+
+        for (const episode of episodes) {
+          const season = await Season.query()
+            .where('serie_id', serieJson.series_id)
+            .where('season_number', seasonNumber)
+            .first()
+
+          if (season === null) {
+            continue
+          }
+
+          await Episode.updateOrCreate(
+            {
+              season_id: season.id,
+              episode_num: episodes.indexOf(episode) + 1,
+            },
+            {
+              title: episode.title,
+              season_id: season.id,
+              episode_num: episodes.indexOf(episode) + 1,
+              url:
+                'http://azertyuk.dynns.com/series/' +
+                USERNAME +
+                '/' +
+                PASSWORD +
+                '/' +
+                episode.id +
+                '.' +
+                episode.container_extension,
+            }
+          )
+        }
+      }
+    }
+
+    count++
+  }
+
+  console.log('[DB]', count, 'series imported')
+}
+
+export async function getSerieInfo(serie_id: number) {
+  let params = new URLSearchParams()
+  params.append('username', USERNAME)
+  params.append('password', PASSWORD)
+  params.append('action', 'get_series_info')
+  params.append('series_id', serie_id.toString())
+
+  const response = await axios.post(API_URL, params, config)
+
+  if (response.status !== 200) {
+    return null
+  }
+
+  const series = await response.data
+
+  return series
 }

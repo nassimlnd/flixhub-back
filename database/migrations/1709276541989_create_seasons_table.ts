@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('title').notNullable()
       table.integer('serie_id').notNullable()
+      table.string('poster').nullable()
       table.integer('season_number').notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

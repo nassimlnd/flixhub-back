@@ -1,7 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import Serie from '#models/serie'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export default class Season extends BaseModel {
   @column({ isPrimary: true })
@@ -10,8 +8,11 @@ export default class Season extends BaseModel {
   @column()
   declare title: string
 
-  @belongsTo(() => Serie, { foreignKey: 'serie_id' })
-  declare serie_id: BelongsTo<typeof Serie>
+  @column()
+  declare serie_id: number
+
+  @column()
+  declare poster: string
 
   @column()
   declare season_number: number
