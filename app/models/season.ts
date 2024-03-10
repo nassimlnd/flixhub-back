@@ -10,7 +10,7 @@ export default class Season extends BaseModel {
   @column()
   declare title: string
 
-  @belongsTo(() => Serie)
+  @belongsTo(() => Serie, { foreignKey: 'serie_id' })
   declare serie_id: BelongsTo<typeof Serie>
 
   @column()

@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('poster').notNullable()
       table.integer('category_id').notNullable()
-      table.integer('serie_id').notNullable()
+      table.integer('serie_id').unique().notNullable()
       table.integer('tmdb_id').notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

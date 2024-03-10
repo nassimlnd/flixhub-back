@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('title').notNullable()
       table.integer('episode_num').notNullable()
-      table.integer('season_id').references('id').inTable('seasons').notNullable()
+      table.integer('season_id').notNullable()
       table.string('url').notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
