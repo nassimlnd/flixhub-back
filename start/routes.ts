@@ -42,9 +42,8 @@ router
     router.get('/movies/random/:amount', [MoviesController, 'getRandomMovieByAmount'])
 
     router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
-    router.get('/movies/:id', [MoviesController, 'getMovieById'])
-
     router.get('/movies/update', [MoviesController, 'updateMovies'])
+    router.get('/movies/:id', [MoviesController, 'getMovieById'])
   })
   .use(middleware.auth())
 
