@@ -11,8 +11,14 @@ export default class Episode extends BaseModel {
   @column()
   declare episode_num: number
 
+  // @column()
+  // declare season_id: number
+
   @column()
-  declare season_id: number
+  declare season_number: number
+
+  @column()
+  declare serie_id: number
 
   @column()
   declare url: string

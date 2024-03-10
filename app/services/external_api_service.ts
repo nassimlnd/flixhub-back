@@ -1,7 +1,6 @@
 import Episode from '#models/episode'
 import Movie from '#models/movie'
 import MovieCategory from '#models/movie_category'
-import Season from '#models/season'
 import Serie from '#models/serie'
 import SerieCategory from '#models/serie_category'
 import env from '#start/env'
@@ -177,41 +176,45 @@ export async function importSeries() {
     const serieData = await getSerieInfo(serieJson.series_id)
 
     if (serieData) {
-      for (const season of serieData.seasons) {
-        await Season.updateOrCreate(
-          {
-            serie_id: serieJson.series_id,
-            season_number: serieData.seasons.indexOf(season) + 1,
-          },
-          {
-            serie_id: serieJson.series_id,
-            season_number: season.season,
-            poster: season.cover_tmdb,
-          }
-        )
-      }
+      // for (const season of serieData.seasons) {
+      //   await Season.updateOrCreate(
+      //     {
+      //       serie_id: serieJson.series_id,
+      //       season_number: serieData.seasons.indexOf(season) + 1,
+      //     },
+      //     {
+      //       serie_id: serieJson.series_id,
+      //       season_number: season.season,
+      //       poster: season.cover_tmdb,
+      //     }
+      //   )
+      // }
 
       for (const seasonNumber in serieData.episodes) {
         let episodes = serieData.episodes[seasonNumber]
 
         for (const episode of episodes) {
-          const season = await Season.query()
-            .where('serie_id', serieJson.series_id)
-            .where('season_number', seasonNumber)
-            .first()
+          // const season = await Season.query()
+          //   .where('serie_id', serieJson.series_id)
+          //   .where('season_number', seasonNumber)
+          //   .first()
 
-          if (season === null) {
-            continue
-          }
+          // if (season === null) {
+          //   continue
+          // }
 
           await Episode.updateOrCreate(
             {
-              season_id: season.id,
+              //season_id: season.id,
+              season_number: Number.parseInt(seasonNumber),
               episode_num: episodes.indexOf(episode) + 1,
+              serie_id: serieJson.series_id,
             },
             {
               title: episode.title,
-              season_id: season.id,
+              //season_id: season.id,
+              season_number: Number.parseInt(seasonNumber),
+              serie_id: serieJson.series_id,
               episode_num: episodes.indexOf(episode) + 1,
               url:
                 'http://azertyuk.dynns.com/series/' +
