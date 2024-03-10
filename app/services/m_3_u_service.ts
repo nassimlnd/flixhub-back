@@ -57,9 +57,9 @@ export async function importM3U(file: string) {
           const serie = new Serie()
 
           if (currentData[2] === 'https://image.tmdb.org/t/p/w600_and_h900_bestv2') {
-            serie.tvg_logo = ''
+            serie.poster = ''
           } else {
-            serie.tvg_logo = currentData[2]
+            serie.poster = currentData[2]
           }
 
           serieList.push(serie)
