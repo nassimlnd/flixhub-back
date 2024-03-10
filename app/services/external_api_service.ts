@@ -246,8 +246,8 @@ export async function getSerieInfo(serie_id: number) {
 
   let done = false
 
-  try {
-    while (!done) {
+  while (!done) {
+    try {
       const response = await axios.post(API_URL, params, config)
 
       if (response.status === 200) {
@@ -257,8 +257,8 @@ export async function getSerieInfo(serie_id: number) {
       const series = await response.data
 
       return series
+    } catch (error) {
+      console.log(error)
     }
-  } catch (error) {
-    console.log(error)
   }
 }
