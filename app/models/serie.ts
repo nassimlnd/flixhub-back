@@ -1,7 +1,5 @@
-import Season from '#models/season'
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export default class Serie extends BaseModel {
   @column({ isPrimary: true })
