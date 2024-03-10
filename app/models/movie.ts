@@ -9,19 +9,19 @@ export default class Movie extends BaseModel {
   declare title: string
 
   @column()
-  declare tvg_id: string
+  declare stream_id: string
 
   @column()
-  declare tvg_name: string
+  declare poster: string
 
   @column()
-  declare tvg_logo: string
-
-  @column()
-  declare group_title: string
+  declare category_id: string
 
   @column()
   declare url: string
+
+  @column()
+  declare tmdb_id: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

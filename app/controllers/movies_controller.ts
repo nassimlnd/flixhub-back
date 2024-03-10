@@ -1,4 +1,5 @@
 import Movie from '#models/movie'
+import { importMovieCategories, importMovies } from '#services/external_api_service'
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 
@@ -92,6 +93,26 @@ export default class MoviesController {
     let movie = await Movie.find(id)
     return response.json({
       movie: movie,
+    })
+  }
+
+  async updateMovies({ auth, response }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    console.log('[DB] User ' + user?.email + ' is updating movies')
+
+    importMovieCategories()
+
+    importMovies()
+
+    return response.json({
+      message: 'Movies updated',
     })
   }
 }
