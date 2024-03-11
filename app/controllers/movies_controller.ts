@@ -107,6 +107,23 @@ export default class MoviesController {
     return response.json(categories)
   }
 
+  async getMovieCategoryById({ request, auth, response }: HttpContext) {
+    const user = auth.user
+    const params = request.params()
+    const id = Number.parseInt(params.id)
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    console.log('[DEBUG] Getting movie category #', id)
+    let category = await MovieCategory.find(id)
+
+    return response.json(category)
+  }
+
   async getRandomMovieByAmount({ request, response, auth }: HttpContext) {
     const params = request.params()
     const amount = Number.parseInt(params.amount)
