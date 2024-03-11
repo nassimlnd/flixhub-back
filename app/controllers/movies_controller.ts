@@ -70,8 +70,7 @@ export default class MoviesController {
   async getMoviesByCategoryAndAmount({ request, response, auth }: HttpContext) {
     const params = request.params()
 
-    let categoryName = decodeURIComponent(params.categoryName)
-    categoryName = categoryName.replaceAll('+', ' ')
+    let categoryId = decodeURIComponent(params.categoryId)
     const amount = Number.parseInt(params.amount)
 
     const user = auth.user
@@ -81,7 +80,7 @@ export default class MoviesController {
       })
     }
 
-    const movieCategory = await MovieCategory.findBy('name', categoryName)
+    const movieCategory = await MovieCategory.find(categoryId)
 
     if (!movieCategory) {
       return response.status(404).json({
@@ -95,7 +94,7 @@ export default class MoviesController {
         ' is getting ' +
         amount +
         ' movies by category ' +
-        categoryName
+        movieCategory.name
     )
 
     let movies = await Movie.query().where('category_id', movieCategory.id).limit(amount)

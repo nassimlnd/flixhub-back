@@ -6,32 +6,36 @@ import { userSimilarity } from '#services/recommandation_service'
 export default class ProfilesController {
   async createProfile({ auth, request, response }: HttpContext) {
     const user = auth.user
-    let interests: string
+    let movieInterests: string
+    let serieInterests: string
 
-    const { name, avatar, birthdate, haveInterests } = request.only([
+    const { name, avatar, birthdate, haveMovieInterests, haveSerieInterests } = request.only([
       'name',
       'avatar',
       'birthdate',
-      'haveInterests',
+      'haveMovieInterests',
+      'haveSerieInterests',
     ])
 
     if (!user) {
       return response.status(401).send('Unauthorized')
     }
 
-    if (haveInterests) {
-      interests = request.input('interests')
+    if (haveMovieInterests) {
+      movieInterests = request.input('moviesInterests')
     } else {
-      interests = JSON.stringify([
-        'FILMS RÉCEMMENT AJOUTÉS',
-        'DOCUMENTAIRES | EMISSION TV',
-        'FRANÇAIS',
-        'ANIMATION | FAMILIALE | ENFANTS',
-        'FANTASTIQUE | AVENTURE',
-      ]).toString()
+      movieInterests = JSON.stringify([2, 60, 157, 19, 146]).toString()
     }
 
-    const profile = await user.related('profiles').create({ name, avatar, interests, birthdate })
+    if (haveSerieInterests) {
+      serieInterests = request.input('seriesInterests')
+    } else {
+      serieInterests = JSON.stringify([135, 136, 137, 163, 140])
+    }
+
+    const profile = await user
+      .related('profiles')
+      .create({ name, avatar, movieInterests, serieInterests, birthdate })
 
     console.log('[DEBUG] User', user?.email, 'created a new profile. (', profile.name, ')')
 
@@ -79,12 +83,13 @@ export default class ProfilesController {
   async updateProfile({ auth, request, response }: HttpContext) {
     const user = auth.user
 
-    const { id, name, avatar, birthdate, interests } = request.only([
+    const { id, name, avatar, birthdate, movieInterests, serieInterests } = request.only([
       'id',
       'name',
       'avatar',
       'birthdate',
-      'interests',
+      'movieInterests',
+      'serieInterests',
     ])
 
     if (!user) {
@@ -100,7 +105,8 @@ export default class ProfilesController {
     profile.name = name
     profile.avatar = avatar
     profile.birthdate = birthdate
-    profile.interests = interests
+    profile.movieInterests = movieInterests
+    profile.serieInterests = serieInterests
 
     await profile.save()
 

@@ -35,7 +35,7 @@ router
     router.get('/movies/category/:categoryId/movies', [MoviesController, 'getMoviesByCategory'])
     router.get('/movies/categories', [MoviesController, 'getCategories'])
 
-    router.get('/movies/category/:categoryName/movies/:amount', [
+    router.get('/movies/category/:categoryId/movies/:amount', [
       MoviesController,
       'getMoviesByCategoryAndAmount',
     ])

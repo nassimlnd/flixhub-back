@@ -18,7 +18,10 @@ export default class Profile extends BaseModel {
   declare birthdate: string
 
   @column()
-  declare interests: string
+  declare movieInterests: string
+
+  @column()
+  declare serieInterests: string
 
   @column()
   declare userId: number
