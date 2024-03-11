@@ -44,6 +44,7 @@ router
     router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
     router.get('/movies/update', [MoviesController, 'updateMovies'])
     router.get('/movies/categories', [MoviesController, 'getCategories'])
+    router.get('/movies/category/:id', [MoviesController, 'getMovieCategoryById'])
 
     router.get('/movies/:id', [MoviesController, 'getMovieById'])
   })
