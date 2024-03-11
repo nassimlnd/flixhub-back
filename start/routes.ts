@@ -31,9 +31,11 @@ router.get('/', async () => {
 router
   .group(() => {
     router.get('/movies', [MoviesController, 'getAll'])
-    router.get('/movies/category/:categoryName', [MoviesController, 'getMoviesByCategory'])
+    router.get('/movies/category/:id', [MoviesController, 'getMovieCategoryById'])
+    router.get('/movies/category/:categoryId/movies', [MoviesController, 'getMoviesByCategory'])
+    router.get('/movies/categories', [MoviesController, 'getCategories'])
 
-    router.get('/movies/groucategoryps/:categoryName/:amount', [
+    router.get('/movies/category/:categoryName/movies/:amount', [
       MoviesController,
       'getMoviesByCategoryAndAmount',
     ])
@@ -43,8 +45,6 @@ router
 
     router.get('/movies/search/:query', [MoviesController, 'searchMovies'])
     router.get('/movies/update', [MoviesController, 'updateMovies'])
-    router.get('/movies/categories', [MoviesController, 'getCategories'])
-    router.get('/movies/category/:id', [MoviesController, 'getMovieCategoryById'])
 
     router.get('/movies/:id', [MoviesController, 'getMovieById'])
   })

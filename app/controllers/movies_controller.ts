@@ -4,19 +4,43 @@ import { importMovieCategories, importMovies } from '#services/external_api_serv
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class MoviesController {
-  async getAll({ response, auth }: HttpContext) {
-    const user = auth.user
-    console.log('[DEBUG] User ' + user?.email + ' is getting all movies')
-    let movies = await Movie.all()
+  // Categories methods
 
-    return response.json(movies)
+  async getCategories({ auth, response }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    console.log('[DEBUG] Getting movie categories')
+    let categories = await MovieCategory.all()
+    return response.json(categories)
+  }
+
+  async getMovieCategoryById({ request, auth, response }: HttpContext) {
+    const user = auth.user
+    const params = request.params()
+    const id = Number.parseInt(params.id)
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    console.log('[DEBUG] Getting movie category #', id)
+    let category = await MovieCategory.find(id)
+
+    return response.json(category)
   }
 
   async getMoviesByCategory({ request, response, auth }: HttpContext) {
     const params = request.params()
 
-    let categoryName = decodeURIComponent(params.categoryName)
-    categoryName = categoryName.replaceAll('+', ' ')
+    let categoryId = Number.parseInt(params.categoryId)
 
     const user = auth.user
 
@@ -26,7 +50,7 @@ export default class MoviesController {
       })
     }
 
-    const movieCategory = await MovieCategory.findBy('name', categoryName)
+    const movieCategory = await MovieCategory.find(categoryId)
 
     if (!movieCategory) {
       return response.status(404).json({
@@ -35,7 +59,7 @@ export default class MoviesController {
     }
 
     console.log(
-      '[DEBUG] User ' + user?.email + ' is getting all movies by category ' + categoryName
+      '[DEBUG] User ' + user?.email + ' is getting all movies by category ' + movieCategory.name
     )
 
     let movies = await Movie.query().where('category_id', movieCategory.id)
@@ -78,51 +102,9 @@ export default class MoviesController {
     return response.json(movies)
   }
 
-  async getRandomMovie({ response, auth }: HttpContext) {
-    const user = auth.user
+  // End of categories methods
 
-    if (!user) {
-      return response.status(401).json({
-        message: 'Unauthorized',
-      })
-    }
-
-    console.log('[DEBUG] User ' + user?.email + ' is getting a random movie')
-
-    let movie = await Movie.query().orderByRaw('RAND()').limit(1)
-    return response.json(movie)
-  }
-
-  async getCategories({ auth, response }: HttpContext) {
-    const user = auth.user
-
-    if (!user) {
-      return response.status(401).json({
-        message: 'Unauthorized',
-      })
-    }
-
-    console.log('[DEBUG] Getting movie categories')
-    let categories = await MovieCategory.all()
-    return response.json(categories)
-  }
-
-  async getMovieCategoryById({ request, auth, response }: HttpContext) {
-    const user = auth.user
-    const params = request.params()
-    const id = Number.parseInt(params.id)
-
-    if (!user) {
-      return response.status(401).json({
-        message: 'Unauthorized',
-      })
-    }
-
-    console.log('[DEBUG] Getting movie category #', id)
-    let category = await MovieCategory.find(id)
-
-    return response.json(category)
-  }
+  // Random methods
 
   async getRandomMovieByAmount({ request, response, auth }: HttpContext) {
     const params = request.params()
@@ -139,6 +121,25 @@ export default class MoviesController {
     let movies = await Movie.query().orderByRaw('RAND()').limit(amount)
     return response.json(movies)
   }
+
+  async getRandomMovie({ response, auth }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    console.log('[DEBUG] User ' + user?.email + ' is getting a random movie')
+
+    let movie = await Movie.query().orderByRaw('RAND()').limit(1)
+    return response.json(movie)
+  }
+
+  // End of random methods
+
+  // Movies methods
 
   async searchMovies({ request, response, auth }: HttpContext) {
     const params = request.params()
@@ -196,4 +197,14 @@ export default class MoviesController {
       message: 'Movies updated',
     })
   }
+
+  async getAll({ response, auth }: HttpContext) {
+    const user = auth.user
+    console.log('[DEBUG] User ' + user?.email + ' is getting all movies')
+    let movies = await Movie.all()
+
+    return response.json(movies)
+  }
+
+  // End of movies methods
 }
