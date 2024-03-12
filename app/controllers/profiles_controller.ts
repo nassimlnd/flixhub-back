@@ -22,13 +22,13 @@ export default class ProfilesController {
     }
 
     if (haveMovieInterests) {
-      movieInterests = request.input('moviesInterests')
+      movieInterests = request.input('movieInterests')
     } else {
       movieInterests = JSON.stringify([2, 60, 157, 19, 146]).toString()
     }
 
     if (haveSerieInterests) {
-      serieInterests = request.input('seriesInterests')
+      serieInterests = request.input('serieInterests')
     } else {
       serieInterests = JSON.stringify([135, 136, 137, 163, 140])
     }
