@@ -177,6 +177,18 @@ export default class MoviesController {
     return response.json(movie)
   }
 
+  async getAll({ response, auth }: HttpContext) {
+    const user = auth.user
+    console.log('[DEBUG] User ' + user?.email + ' is getting all movies')
+    let movies = await Movie.all()
+
+    return response.json(movies)
+  }
+
+  // End of movies methods
+
+  // Import methods
+
   async updateMovies({ auth, response }: HttpContext) {
     const user = auth.user
 
@@ -197,13 +209,5 @@ export default class MoviesController {
     })
   }
 
-  async getAll({ response, auth }: HttpContext) {
-    const user = auth.user
-    console.log('[DEBUG] User ' + user?.email + ' is getting all movies')
-    let movies = await Movie.all()
-
-    return response.json(movies)
-  }
-
-  // End of movies methods
+  // End of import methods
 }

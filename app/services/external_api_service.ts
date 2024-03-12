@@ -75,31 +75,33 @@ export async function importMovies() {
   let count = 0
 
   for (const movieJson of movies) {
-    await Movie.updateOrCreate(
-      {
-        title: movieJson.name,
-        stream_id: movieJson.stream_id,
-      },
-      {
-        title: movieJson.name,
-        stream_id: movieJson.stream_id,
-        poster: movieJson.stream_icon,
-        category_id: movieJson.category_id,
-        tmdb_id: movieJson.tmdb,
-        url:
-          'http://azertyuk.dynns.com/' +
-          movieJson.stream_type +
-          '/' +
-          USERNAME +
-          '/' +
-          PASSWORD +
-          '/' +
-          movieJson.stream_id +
-          '.' +
-          movieJson.container_extension,
-      }
-    )
-    count++
+    if (movieJson.tmdb !== '') {
+      await Movie.updateOrCreate(
+        {
+          title: movieJson.name,
+          stream_id: movieJson.stream_id,
+        },
+        {
+          title: movieJson.name,
+          stream_id: movieJson.stream_id,
+          poster: movieJson.stream_icon,
+          category_id: movieJson.category_id,
+          tmdb_id: movieJson.tmdb,
+          url:
+            'http://azertyuk.dynns.com/' +
+            movieJson.stream_type +
+            '/' +
+            USERNAME +
+            '/' +
+            PASSWORD +
+            '/' +
+            movieJson.stream_id +
+            '.' +
+            movieJson.container_extension,
+        }
+      )
+      count++
+    }
 
     //console.log('[DB] Imported movie ' + movie.title)
   }
