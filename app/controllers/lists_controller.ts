@@ -24,8 +24,10 @@ export default class ListsController {
 
   async deleteMovie({ auth, request, response }: HttpContext) {
     const user = auth.user
+    const params = request.params()
+    const id = params.id
 
-    const { id, movieId } = request.only(['id', 'movieId'])
+    const { movieId } = request.only(['movieId'])
 
     if (!user) {
       return response.status(401).send('Unauthorized')
