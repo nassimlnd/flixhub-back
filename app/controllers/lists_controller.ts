@@ -50,7 +50,9 @@ export default class ListsController {
 
   async addMovie({ auth, request, response }: HttpContext) {
     const user = auth.user
-    const { id, movieId } = request.only(['id', 'movieId'])
+    const params = request.params()
+    const id = params.id
+    const { movieId } = request.only(['movieId'])
     if (!user) {
       return response.status(401).send('Unauthorized')
     }
