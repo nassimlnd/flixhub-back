@@ -34,4 +34,22 @@ export default class AuthController {
     await auth.use('web').logout()
     return response.json({ message: 'Logged out successfully' })
   }
+
+  async registerFCMToken({ request, auth, response }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({ message: 'Unauthorized' })
+    }
+
+    const { fcmToken } = request.only(['fcmToken'])
+
+    user.fcmToken = fcmToken
+
+    console.log('[DEBUG] User (' + user.email + ') FCM token registered successfully')
+
+    await user.save()
+
+    return response.json({ message: 'FCM token registered successfully' })
+  }
 }
