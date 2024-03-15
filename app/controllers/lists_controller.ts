@@ -17,7 +17,7 @@ export default class ListsController {
       return response.notFound('Profile not found')
     }
 
-    let list = await List.findBy('profile_id', id)
+    let list = await List.query().where('profile_id', id)
     return response.json(list)
   }
 
