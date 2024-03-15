@@ -16,10 +16,9 @@ export default class ListsController {
     if (!profile) {
       return response.notFound('Profile not found')
     }
-    let list = await List.find(id)
-    return response.json({
-      list: list,
-    })
+
+    let list = await List.findBy('profile_id', id)
+    return response.json(list)
   }
 
   async deleteMovie({ auth, request, response }: HttpContext) {
