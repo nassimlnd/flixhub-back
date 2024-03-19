@@ -55,6 +55,8 @@ router
 router
   .group(() => {
     router.get('/series/update', [SeriesController, 'importSeries'])
+
+    router.get('/series', [SeriesController, 'getAll'])
   })
   .use(middleware.auth())
 
