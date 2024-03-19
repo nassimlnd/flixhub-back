@@ -57,6 +57,8 @@ router
     router.get('/series/update', [SeriesController, 'importSeries'])
 
     router.get('/series', [SeriesController, 'getAll'])
+
+    router.get('/series/:id', [SeriesController, 'getSerieById'])
   })
   .use(middleware.auth())
 

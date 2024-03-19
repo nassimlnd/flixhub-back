@@ -33,7 +33,7 @@ export default class SeriesController {
 
     console.log('[DEBUG] User ' + user?.email + ' is getting all series')
 
-    const series = await Serie.all()
+    const series = await Serie.query().orderBy('id', 'asc')
 
     return response.json(series)
   }
@@ -62,8 +62,8 @@ export default class SeriesController {
 
     const episodes = await Episode.query()
       .where('serie_id', serie.serie_id)
-      .orderBy('season', 'asc')
-      .orderBy('episode', 'asc')
+      .orderBy('season_number', 'asc')
+      .orderBy('episode_num', 'asc')
 
     return response.json({ serie, episodes })
   }
