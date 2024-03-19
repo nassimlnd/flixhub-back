@@ -98,6 +98,15 @@ export default class SeriesController {
       series = await Serie.query().where('category_id', serieCategory.id)
     }
 
+    console.log(
+      '[DEBUG] User ' +
+        user?.email +
+        ' is getting ' +
+        amount +
+        ' series from category ' +
+        serieCategory.name
+    )
+
     return response.json(series)
   }
 }
