@@ -82,6 +82,7 @@ export async function importMovies() {
           stream_id: movieJson.stream_id,
         },
         {
+          id: movieJson.stream_id,
           title: movieJson.name,
           stream_id: movieJson.stream_id,
           poster: movieJson.stream_icon,
@@ -183,8 +184,7 @@ export async function importSeries() {
     if (serieData) {
       // for (const season of serieData.seasons) {
       //   await Season.updateOrCreate(
-      //     {
-      //       serie_id: serieJson.series_id,
+      //     {      //       serie_id: serieJson.series_id,
       //       season_number: serieData.seasons.indexOf(season) + 1,
       //     },
       //     {

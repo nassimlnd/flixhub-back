@@ -56,6 +56,7 @@ export default class NotificationsController {
     )
 
     const notifications = []
+    const tokens = []
 
     for (const user of users) {
       const notification = new Notification()
@@ -64,7 +65,31 @@ export default class NotificationsController {
 
       await notification.related('user').associate(user)
       notifications.push(notification)
+
+      if (user.fcmToken) {
+        tokens.push(user.fcmToken)
+      }
     }
+
+    const app = FCM.getInstance()
+
+    if (!app) {
+      return response.status(500).json({ message: 'Firebase app not found' })
+    }
+
+    const message = {
+      data: {
+        title: params.title,
+        message: params.message,
+      },
+      tokens,
+    }
+
+    await getMessaging(app)
+      .sendEachForMulticast(message)
+      .then((res) => {
+        console.log('Successfully sent message:', res)
+      })
 
     return response.status(201).json(notifications)
   }
@@ -86,11 +111,13 @@ export default class NotificationsController {
       data: {
         title: 'Bonsoir paris',
       },
-      token:
-        'eWg5DgvBQ7assinkjM2FcH:APA91bGDh77J-XOWOcbOAZ30VTk4DTrU3s_aBpCXZH8IDV4GoxuKZ_mCL9a7ASelsexOzJA4gBBJdERfke4xkQO0f2pcHbeAiIe5JMNjR7uGUAFIZ_gjvnJ_0-Hx2HXFTsiKAEZC5Jnw',
+      tokens: [
+        'cAPNjhfIRYyVPDIsgUyblW:APA91bHV6K1jrl45BMlh6lB0sG8ntZcoJirrkeABgdN2AqRU3ylxjanl1TWk07rr1_FHORiglLooyl2DV1p2N6VPRuy1uVnOY64C8NCFUechJbse0CY1e43esy51IB72-Cg9vJuWaAv7',
+        'fHukJ4muSeebimtuyEHrE5:APA91bF1KazwbZ0neE03EkgweHV5IeF571onryqFbwfYNJYd9--WQOM_1GH4urrH-jt-AyOA7VofD0C8scoIzxMenxwbx1VMfOaB8WYXquxpprsIUN13X_reX329hZTjls4mO-U9yoye',
+      ],
     }
     await getMessaging(app)
-      .send(message)
+      .sendEachForMulticast(message)
       .then((res) => {
         console.log('Successfully sent message:', res)
       })

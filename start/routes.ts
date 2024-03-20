@@ -130,5 +130,3 @@ router.post('/auth/fcm', [AuthController, 'registerFCMToken']).use(middleware.au
 // Recommandation routes
 
 router.get('/recommandation', [ProfilesController, 'testRecommandation'])
-
-router.get('/test/notification', [NotificationsController, 'sendNotificationTest'])
