@@ -109,4 +109,29 @@ export default class SeriesController {
 
     return response.json(series)
   }
+
+  async getSerieCategoryById({ auth, response, request }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    const params = request.params()
+    const id = params.id
+
+    const serieCategory = await SerieCategory.find(id)
+
+    if (!serieCategory) {
+      return response.status(404).json({
+        message: 'Category not found',
+      })
+    }
+
+    console.log('[DEBUG] User ' + user?.email + ' is getting serie category with id ' + id)
+
+    return response.json(serieCategory)
+  }
 }

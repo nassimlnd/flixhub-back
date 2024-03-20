@@ -59,7 +59,7 @@ router
 
     router.get('/series', [SeriesController, 'getAll'])
     router.get('/series/:id', [SeriesController, 'getSerieById'])
-
+    router.get('/series/category/:id', [SeriesController, 'getSerieCategoryById'])
     router.get('/series/category/:categoryId/:amount', [
       SeriesController,
       'getSeriesByCategoryAndAmount',
