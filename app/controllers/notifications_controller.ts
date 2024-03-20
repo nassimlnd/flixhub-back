@@ -1,6 +1,9 @@
 import Notification from '#models/notification'
 import User from '#models/user'
 import type { HttpContext } from '@adonisjs/core/http'
+import { credential, initializeApp } from 'firebase-admin'
+import env from '#start/env'
+import { getMessaging } from 'firebase-admin/messaging'
 
 export default class NotificationsController {
   async getAll({ auth, response }: HttpContext) {
@@ -64,5 +67,31 @@ export default class NotificationsController {
     }
 
     return response.status(201).json(notifications)
+  }
+
+  async sendNotificationTest({ response }: HttpContext) {
+    const url = env.get('GOOGLE_APPLICATION_CREDENTIALS')
+
+    if (!url) {
+      return response.status(500).json({ message: 'Google credentials not found' })
+    }
+
+    const app = initializeApp({
+      credential: credential.cert(url),
+      projectId: 'flixhub-f57be',
+    })
+
+    const message = {
+      data: {
+        title: 'Test',
+      },
+      token:
+        'eWg5DgvBQ7assinkjM2FcH:APA91bGDh77J-XOWOcbOAZ30VTk4DTrU3s_aBpCXZH8IDV4GoxuKZ_mCL9a7ASelsexOzJA4gBBJdERfke4xkQO0f2pcHbeAiIe5JMNjR7uGUAFIZ_gjvnJ_0-Hx2HXFTsiKAEZC5Jnw',
+    }
+    await getMessaging(app)
+      .send(message)
+      .then((res) => {
+        console.log('Successfully sent message:', res)
+      })
   }
 }
