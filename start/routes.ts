@@ -31,6 +31,7 @@ router.get('/', async () => {
 router
   .group(() => {
     router.get('/movies', [MoviesController, 'getAll'])
+    router.get('/movies/category/name/:name', [MoviesController, 'getMovieCategoryByName'])
     router.get('/movies/category/:id', [MoviesController, 'getMovieCategoryById'])
     router.get('/movies/category/:categoryId/movies', [MoviesController, 'getMoviesByCategory'])
     router.get('/movies/categories', [MoviesController, 'getCategories'])

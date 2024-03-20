@@ -101,6 +101,30 @@ export default class MoviesController {
     return response.json(movies)
   }
 
+  async getMovieCategoryByName({ request, response, auth }: HttpContext) {
+    const user = auth.user
+    const params = request.params()
+
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    const categoryName = decodeURIComponent(params.name)
+
+    const movieCategory = await MovieCategory.findBy('name', categoryName)
+
+    if (!movieCategory) {
+      return response.status(404).json({
+        message: 'Category not found',
+      })
+    }
+
+    console.log('[DEBUG] User ' + user?.email + ' is getting category ' + movieCategory.name)
+
+    return response.json(movieCategory)
+  }
   // End of categories methods
 
   // Random methods
