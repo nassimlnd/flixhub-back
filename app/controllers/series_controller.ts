@@ -134,4 +134,25 @@ export default class SeriesController {
 
     return response.json(serieCategory)
   }
+
+  async getRandomSerie({ auth, response }: HttpContext) {
+    const user = auth.user
+    if (!user) {
+      return response.status(401).json({
+        message: 'Unauthorized',
+      })
+    }
+
+    const serie = await Serie.query().orderByRaw('RAND()').limit(1).first()
+
+    if (!serie) {
+      return response.status(404).json({
+        message: 'No series found',
+      })
+    }
+
+    console.log('[DEBUG] User ' + user?.email + ' is getting random serie')
+
+    return response.json(serie)
+  }
 }
