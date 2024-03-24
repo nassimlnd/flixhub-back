@@ -19,7 +19,7 @@ const config = {
 const USERNAME: string = env.get('EXTERNAL_API_USERNAME', '')
 const PASSWORD: string = env.get('EXTERNAL_API_PASSWORD', '')
 
-const rejectedCategories = ['190', '164', '230']
+const rejectedCategories = ['164', '190', '225', '230']
 
 export async function importMovieCategories() {
   let params = new URLSearchParams()
@@ -146,6 +146,7 @@ export async function importSerieCategories() {
 
   for (const rejectedCategory of rejectedCategories) {
     await SerieCategory.query().where('id', rejectedCategory).delete()
+    count--
   }
 
   console.log('[DB]', count, 'serie categories imported')
@@ -171,101 +172,99 @@ export async function importSeries() {
   let episodeCount = 0
 
   for (const serieJson of series) {
-    if (rejectedCategories.includes(serieJson.category_id)) {
-      continue
-    }
+    if (!rejectedCategories.includes(serieJson.category_id)) {
+      await Serie.updateOrCreate(
+        {
+          title: serieJson.name,
+          serie_id: serieJson.series_id,
+        },
+        {
+          id: serieJson.series_id,
+          title: serieJson.name,
+          serie_id: serieJson.series_id,
+          poster: serieJson.cover,
+          category_id: serieJson.category_id,
+          tmdb_id: serieJson.tmdb,
+        }
+      )
 
-    await Serie.updateOrCreate(
-      {
-        title: serieJson.name,
-        serie_id: serieJson.series_id,
-      },
-      {
-        id: serieJson.series_id,
-        title: serieJson.name,
-        serie_id: serieJson.series_id,
-        poster: serieJson.cover,
-        category_id: serieJson.category_id,
-        tmdb_id: serieJson.tmdb,
-      }
-    )
+      const serieData = await getSerieInfo(serieJson.series_id)
 
-    const serieData = await getSerieInfo(serieJson.series_id)
+      if (serieData) {
+        for (const seasonNumber in serieData.episodes) {
+          let episodes = serieData.episodes[seasonNumber]
 
-    if (serieData) {
-      for (const seasonNumber in serieData.episodes) {
-        let episodes = serieData.episodes[seasonNumber]
+          for (const episode of episodes) {
+            let posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
 
-        for (const episode of episodes) {
-          let posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
+            if (serieJson.tmdb !== '0') {
+              const tmdbApiKey = env.get('TMDB_API_KEY', '')
 
-          if (serieJson.tmdb !== '0') {
-            const tmdbApiKey = env.get('TMDB_API_KEY', '')
+              const tmdbRes = await axios
+                .get(
+                  'https://api.themoviedb.org/3/tv/' +
+                    serieJson.tmdb +
+                    '/season/' +
+                    seasonNumber +
+                    '/episode/' +
+                    episode.episode_num +
+                    '?api_key=' +
+                    tmdbApiKey +
+                    '&language=fr-Fr'
+                )
+                .catch(() => {
+                  console.log('[DB] Error getting episode info for serie', serieJson.series_id)
+                })
 
-            const tmdbRes = await axios
-              .get(
-                'https://api.themoviedb.org/3/tv/' +
-                  serieJson.tmdb +
-                  '/season/' +
-                  seasonNumber +
-                  '/episode/' +
-                  episode.episode_num +
-                  '?api_key=' +
-                  tmdbApiKey +
-                  '&language=fr-Fr'
-              )
-              .catch(() => {
-                console.log('[DB] Error getting episode info for serie', serieJson.series_id)
-              })
-
-            if (tmdbRes) {
-              if (tmdbRes.status !== 200) {
-                posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
-              } else {
-                const episodeData = await tmdbRes.data
-
-                if (episodeData.still_path === null) {
+              if (tmdbRes) {
+                if (tmdbRes.status !== 200) {
                   posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
                 } else {
-                  posterUrl = 'https://image.tmdb.org/t/p/w500' + episodeData.still_path
+                  const episodeData = await tmdbRes.data
+
+                  if (episodeData.still_path === null) {
+                    posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
+                  } else {
+                    posterUrl = 'https://image.tmdb.org/t/p/w500' + episodeData.still_path
+                  }
                 }
               }
+            } else {
+              posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
             }
-          } else {
-            posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
-          }
 
-          await Episode.updateOrCreate(
-            {
-              //season_id: season.id,
-              season_number: Number.parseInt(seasonNumber),
-              episode_num: episodes.indexOf(episode) + 1,
-              serie_id: serieJson.series_id,
-            },
-            {
-              title: episode.title,
-              //season_id: season.id,
-              poster: posterUrl,
-              season_number: Number.parseInt(seasonNumber),
-              serie_id: serieJson.series_id,
-              episode_num: episodes.indexOf(episode) + 1,
-              url:
-                'http://azertyuk.dynns.com/series/' +
-                USERNAME +
-                '/' +
-                PASSWORD +
-                '/' +
-                episode.id +
-                '.' +
-                episode.container_extension,
-            }
-          )
-          episodeCount++
+            await Episode.updateOrCreate(
+              {
+                //season_id: season.id,
+                season_number: Number.parseInt(seasonNumber),
+                episode_num: episodes.indexOf(episode) + 1,
+                serie_id: serieJson.series_id,
+              },
+              {
+                title: episode.title,
+                //season_id: season.id,
+                poster: posterUrl,
+                season_number: Number.parseInt(seasonNumber),
+                serie_id: serieJson.series_id,
+                episode_num: episodes.indexOf(episode) + 1,
+                url:
+                  'http://azertyuk.dynns.com/series/' +
+                  USERNAME +
+                  '/' +
+                  PASSWORD +
+                  '/' +
+                  episode.id +
+                  '.' +
+                  episode.container_extension,
+              }
+            )
+            episodeCount++
+          }
         }
       }
-    }
 
-    count++
+      count++
+    }
   }
 
   const endTime = Date.now()
