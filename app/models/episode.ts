@@ -20,6 +20,9 @@ export default class Episode extends BaseModel {
   @column()
   declare url: string
 
+  @column()
+  declare poster: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
