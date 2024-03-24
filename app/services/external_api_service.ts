@@ -202,7 +202,7 @@ export async function importSeries() {
         for (const episode of episodes) {
           let posterUrl = ''
 
-          if (serieJson.tmdb !== 0) {
+          if (serieJson.tmdb !== '0') {
             const tmdbApiKey = env.get('TMDB_API_KEY', '')
 
             const tmdbRes = await axios.get(
