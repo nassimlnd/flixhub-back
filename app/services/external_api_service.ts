@@ -19,6 +19,8 @@ const config = {
 const USERNAME: string = env.get('EXTERNAL_API_USERNAME', '')
 const PASSWORD: string = env.get('EXTERNAL_API_PASSWORD', '')
 
+const rejectedCategories = ['190', '164', '230']
+
 export async function importMovieCategories() {
   let params = new URLSearchParams()
   params.append('username', USERNAME)
@@ -142,6 +144,10 @@ export async function importSerieCategories() {
     //console.log('[DB] Imported serie category ' + serieCategory.name)
   }
 
+  for (const rejectedCategory of rejectedCategories) {
+    await SerieCategory.query().where('id', rejectedCategory).delete()
+  }
+
   console.log('[DB]', count, 'serie categories imported')
 }
 
@@ -165,6 +171,10 @@ export async function importSeries() {
   let episodeCount = 0
 
   for (const serieJson of series) {
+    if (rejectedCategories.includes(serieJson.category_id)) {
+      continue
+    }
+
     await Serie.updateOrCreate(
       {
         title: serieJson.name,
@@ -183,19 +193,6 @@ export async function importSeries() {
     const serieData = await getSerieInfo(serieJson.series_id)
 
     if (serieData) {
-      // for (const season of serieData.seasons) {
-      //   await Season.updateOrCreate(
-      //     {      //       serie_id: serieJson.series_id,
-      //       season_number: serieData.seasons.indexOf(season) + 1,
-      //     },
-      //     {
-      //       serie_id: serieJson.series_id,
-      //       season_number: season.season,
-      //       poster: season.cover_tmdb,
-      //     }
-      //   )
-      // }
-
       for (const seasonNumber in serieData.episodes) {
         let episodes = serieData.episodes[seasonNumber]
 
