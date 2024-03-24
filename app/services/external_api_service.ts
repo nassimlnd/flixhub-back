@@ -200,21 +200,21 @@ export async function importSeries() {
             if (serieJson.tmdb !== '0') {
               const tmdbApiKey = env.get('TMDB_API_KEY', '')
 
-              const tmdbRes = await axios
-                .get(
-                  'https://api.themoviedb.org/3/tv/' +
-                    serieJson.tmdb +
-                    '/season/' +
-                    seasonNumber +
-                    '/episode/' +
-                    episode.episode_num +
-                    '?api_key=' +
-                    tmdbApiKey +
-                    '&language=fr-Fr'
-                )
-                .catch(() => {
-                  console.log('[DB] Error getting episode info for serie', serieJson.series_id)
-                })
+              const url =
+                'https://api.themoviedb.org/3/tv/' +
+                serieJson.tmdb +
+                '/season/' +
+                seasonNumber +
+                '/episode/' +
+                episode.episode_num +
+                '?api_key=' +
+                tmdbApiKey +
+                '&language=fr-Fr'
+
+              const tmdbRes = await axios.get(url).catch(() => {
+                console.log('[DB] Error getting episode info for serie', serieJson.series_id)
+                console.log('[DB] URL:', url)
+              })
 
               if (tmdbRes) {
                 if (tmdbRes.status !== 200) {
