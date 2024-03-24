@@ -200,30 +200,40 @@ export async function importSeries() {
         let episodes = serieData.episodes[seasonNumber]
 
         for (const episode of episodes) {
-          let posterUrl = ''
+          let posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
 
           if (serieJson.tmdb !== '0') {
             const tmdbApiKey = env.get('TMDB_API_KEY', '')
 
-            const tmdbRes = await axios.get(
-              'https://api.themoviedb.org/3/tv/' +
-                serieJson.tmdb +
-                '/season/' +
-                seasonNumber +
-                '/episode/' +
-                episode.episode_num +
-                '?api_key=' +
-                tmdbApiKey +
-                '&language=fr-Fr'
-            )
+            const tmdbRes = await axios
+              .get(
+                'https://api.themoviedb.org/3/tv/' +
+                  serieJson.tmdb +
+                  '/season/' +
+                  seasonNumber +
+                  '/episode/' +
+                  episode.episode_num +
+                  '?api_key=' +
+                  tmdbApiKey +
+                  '&language=fr-Fr'
+              )
+              .catch((error) => {
+                console.log('[DB] Error getting episode info', error)
+              })
 
-            if (tmdbRes.status !== 200) {
-              return null
+            if (tmdbRes) {
+              if (tmdbRes.status !== 200) {
+                posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
+              } else {
+                const episodeData = await tmdbRes.data
+
+                if (episodeData.still_path === null) {
+                  posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
+                } else {
+                  posterUrl = 'https://image.tmdb.org/t/p/w500' + episodeData.still_path
+                }
+              }
             }
-
-            const episodeData = await tmdbRes.data
-
-            posterUrl = 'https://image.tmdb.org/t/p/w500' + episodeData.still_path
           } else {
             posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
           }
