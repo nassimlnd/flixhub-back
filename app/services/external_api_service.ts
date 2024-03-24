@@ -212,8 +212,8 @@ export async function importSeries() {
                 '&language=fr-Fr'
 
               const tmdbRes = await axios.get(url).catch(() => {
-                console.log('[DB] Error getting episode info for serie', serieJson.series_id)
-                console.log('[DB] URL:', url)
+                // console.log('[DB] Error getting episode info for serie', serieJson.series_id)
+                // console.log('[DB] URL:', url)
               })
 
               if (tmdbRes) {
