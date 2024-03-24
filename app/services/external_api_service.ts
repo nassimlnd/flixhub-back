@@ -217,8 +217,8 @@ export async function importSeries() {
                   tmdbApiKey +
                   '&language=fr-Fr'
               )
-              .catch((error) => {
-                console.log('[DB] Error getting episode info', error)
+              .catch(() => {
+                console.log('[DB] Error getting episode info for serie', serieJson.series_id)
               })
 
             if (tmdbRes) {
