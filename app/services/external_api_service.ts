@@ -200,25 +200,33 @@ export async function importSeries() {
         let episodes = serieData.episodes[seasonNumber]
 
         for (const episode of episodes) {
-          const tmdbApiKey = env.get('TMDB_API_KEY', '')
+          let posterUrl = ''
 
-          const tmdbRes = await axios.get(
-            'https://api.themoviedb.org/3/tv/' +
-              serieJson.tmdb +
-              '/season/' +
-              seasonNumber +
-              '/episode/' +
-              episode.episode_num +
-              '?api_key=' +
-              tmdbApiKey +
-              '&language=fr-Fr'
-          )
+          if (serieJson.tmdb !== 0) {
+            const tmdbApiKey = env.get('TMDB_API_KEY', '')
 
-          if (tmdbRes.status !== 200) {
-            return null
+            const tmdbRes = await axios.get(
+              'https://api.themoviedb.org/3/tv/' +
+                serieJson.tmdb +
+                '/season/' +
+                seasonNumber +
+                '/episode/' +
+                episode.episode_num +
+                '?api_key=' +
+                tmdbApiKey +
+                '&language=fr-Fr'
+            )
+
+            if (tmdbRes.status !== 200) {
+              return null
+            }
+
+            const episodeData = await tmdbRes.data
+
+            posterUrl = 'https://image.tmdb.org/t/p/w500' + episodeData.still_path
+          } else {
+            posterUrl = 'https://api.nassimlounadi.fr/images/image_placeholder.png'
           }
-
-          const episodeData = await tmdbRes.data
 
           await Episode.updateOrCreate(
             {
@@ -230,7 +238,7 @@ export async function importSeries() {
             {
               title: episode.title,
               //season_id: season.id,
-              poster: 'https://image.tmdb.org/t/p/w500' + episodeData.still_path,
+              poster: posterUrl,
               season_number: Number.parseInt(seasonNumber),
               serie_id: serieJson.series_id,
               episode_num: episodes.indexOf(episode) + 1,
