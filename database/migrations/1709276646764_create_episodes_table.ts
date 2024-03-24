@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.integer('season_number').notNullable()
       table.integer('serie_id').notNullable()
       table.string('url').notNullable()
+      table.string('poster').notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
     })
