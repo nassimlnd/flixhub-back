@@ -41,6 +41,26 @@ export default class NotificationsController {
 
     await notification.related('user').associate(user)
 
+    const app = FCM.getInstance()
+
+    if (!app) {
+      return response.status(500).json({ message: 'Firebase app not found' })
+    }
+
+    const message = {
+      data: {
+        title: params.title,
+        message: params.message,
+      },
+      token: user.fcmToken,
+    }
+
+    await getMessaging(app)
+      .send(message)
+      .then((res) => {
+        console.log('Successfully sent message:', res)
+      })
+
     return response.status(201).json(notification)
   }
 
