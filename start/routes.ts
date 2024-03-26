@@ -7,6 +7,8 @@
 |
 */
 
+import Movie from '#models/movie'
+
 const ListsController = () => import('#controllers/lists_controller')
 const RatingsController = () => import('#controllers/ratings_controller')
 const MoviesController = () => import('#controllers/movies_controller')
@@ -18,6 +20,7 @@ const InteractionsController = () => import('#controllers/interactions_controlle
 const SeriesController = () => import('#controllers/series_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import Serie from '#models/serie'
 
 router.get('/', async () => {
   return {
@@ -131,3 +134,23 @@ router.post('/auth/fcm', [AuthController, 'registerFCMToken']).use(middleware.au
 // Recommandation routes
 
 router.get('/recommandation', [ProfilesController, 'testRecommandation'])
+
+// Search route
+
+router.get('/search/:query', async (request) => {
+  const query = request.params.query
+
+  const movies = await Movie.query().where('title', 'LIKE', `%${query}%`).exec()
+  const series = await Serie.query().where('title', 'LIKE', `%${query}%`).exec()
+
+  if (!movies && !series) {
+    return {
+      message: 'No results found',
+    }
+  }
+
+  return {
+    movies,
+    series,
+  }
+})
