@@ -137,23 +137,25 @@ router.get('/recommandation', [ProfilesController, 'testRecommandation'])
 
 // Search route
 
-router.get('/search/:query', async (request) => {
-  const query = request.params.query
+router
+  .get('/search/:query', async (request) => {
+    const query = request.params.query
 
-  let title = decodeURIComponent(query)
-  title = title.replaceAll('+', ' ')
+    let title = decodeURIComponent(query)
+    title = title.replaceAll('+', ' ')
 
-  const movies = await Movie.query().where('title', 'LIKE', `%${title}%`).exec()
-  const series = await Serie.query().where('title', 'LIKE', `%${title}%`).exec()
+    const movies = await Movie.query().where('title', 'LIKE', `%${title}%`).exec()
+    const series = await Serie.query().where('title', 'LIKE', `%${title}%`).exec()
 
-  if (!movies && !series) {
-    return {
-      message: 'No results found',
+    if (!movies && !series) {
+      return {
+        message: 'No results found',
+      }
     }
-  }
 
-  return {
-    movies,
-    series,
-  }
-})
+    return {
+      movies,
+      series,
+    }
+  })
+  .use(middleware.auth())
