@@ -140,8 +140,11 @@ router.get('/recommandation', [ProfilesController, 'testRecommandation'])
 router.get('/search/:query', async (request) => {
   const query = request.params.query
 
-  const movies = await Movie.query().where('title', 'LIKE', `%${query}%`).exec()
-  const series = await Serie.query().where('title', 'LIKE', `%${query}%`).exec()
+  let title = decodeURIComponent(query)
+  title = title.replaceAll('+', ' ')
+
+  const movies = await Movie.query().where('title', 'LIKE', `%${title}%`).exec()
+  const series = await Serie.query().where('title', 'LIKE', `%${title}%`).exec()
 
   if (!movies && !series) {
     return {
