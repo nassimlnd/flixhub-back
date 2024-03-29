@@ -131,6 +131,10 @@ router.post('/auth/login', [AuthController, 'login'])
 router.post('/auth/logout', [AuthController, 'logout'])
 router.post('/auth/fcm', [AuthController, 'registerFCMToken']).use(middleware.auth())
 
+// User routes
+
+router.post('/user/update', [AuthController, 'updateUser']).use(middleware.auth())
+
 // Recommandation routes
 
 router.get('/recommandation', [ProfilesController, 'testRecommandation'])

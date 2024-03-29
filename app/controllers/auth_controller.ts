@@ -52,4 +52,23 @@ export default class AuthController {
 
     return response.json({ message: 'FCM token registered successfully' })
   }
+
+  async updateUser({ request, response, auth }: HttpContext) {
+    const user = auth.user
+
+    if (!user) {
+      return response.status(401).json({ message: 'Unauthorized' })
+    }
+
+    const { fullName, email } = request.only(['fullName', 'email'])
+
+    user.fullName = fullName
+    user.email = email
+
+    await user.save()
+
+    console.log('[DEBUG] User (' + user.email + ') updated successfully')
+
+    return response.json({ message: 'User updated successfully', user })
+  }
 }
