@@ -46,6 +46,7 @@ export default class ListsController {
     if (!movie) {
       return response.status(404).send('Movie was not found in profile list')
     }
+
     await movie.delete()
   }
 
@@ -67,6 +68,16 @@ export default class ListsController {
     if (!movie) {
       return response.status(404).send('Movie not found')
     }
+
+    const movieInList = await List.query()
+      .where('movie_id', movieId)
+      .andWhere('profile_id', profile.id)
+      .first()
+
+    if (movieInList) {
+      return response.status(400).send('Movie already in list')
+    }
+
     const list = new List()
     list.movie_id = movieId
     list.profile_id = profile.id
