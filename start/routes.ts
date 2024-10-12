@@ -168,7 +168,7 @@ router
 
 // IA Routes for tests
 router.get('/ia', async ({ request, response }: HttpContext) => {
-  const prompt = request.input('prompt')
+  const prompt = request.only(['prompt'])
 
   if (!prompt) {
     return response.badRequest('Prompt is required')
