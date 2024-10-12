@@ -167,7 +167,7 @@ router
   .use(middleware.auth())
 
 // IA Routes for tests
-router.get('/ia', async ({ request, response }: HttpContext) => {
+router.post('/ia', async ({ request, response }: HttpContext) => {
   const prompt = request.only(['prompt'])
 
   if (!prompt) {
@@ -179,13 +179,13 @@ router.get('/ia', async ({ request, response }: HttpContext) => {
   const res = await axios.post('http://localhost:11434/api/generate', {
     model: 'tinyllama:latest',
     prompt:
-      'Write a typescript function who calculates the fibonacci suit recursively without explanation',
+      'Write a typescript function who calculates the fibonacci suit recursively without explanation. I just want the code.',
     stream: false,
   })
 
   if (res.status === 200) {
     return res.data.response
+  } else {
+    return response.status(res.status)
   }
-
-  return res
 })
