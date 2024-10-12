@@ -184,7 +184,7 @@ router.get('/ia', async ({ request, response }: HttpContext) => {
   })
 
   if (res.status === 200) {
-    return res
+    return res.data.response
   }
 
   return res
