@@ -174,13 +174,18 @@ router.get('/ia', async ({ request, response }: HttpContext) => {
     return response.badRequest('Prompt is required')
   }
 
+  console.log('[DEBUG] Prompt:', prompt)
+
   const res = await axios.post('http://localhost:11434/api/generate', {
     model: 'tinyllama:latest',
     prompt:
       'Write a typescript function who calculates the fibonacci suit recursively without explanation',
+    stream: false,
   })
 
   if (res.status === 200) {
-    return res.data
+    return res
   }
+
+  return res
 })
