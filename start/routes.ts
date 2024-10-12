@@ -21,6 +21,8 @@ const SeriesController = () => import('#controllers/series_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import Serie from '#models/serie'
+import { HttpContext } from '@adonisjs/core/http'
+import axios from 'axios'
 
 router.get('/', async () => {
   return {
@@ -163,3 +165,22 @@ router
     }
   })
   .use(middleware.auth())
+
+// IA Routes for tests
+router.get('/ia', async ({ request, response }: HttpContext) => {
+  const prompt = request.input('prompt')
+
+  if (!prompt) {
+    return response.badRequest('Prompt is required')
+  }
+
+  const res = await axios.post('http://localhost:11434/api/generate', {
+    model: 'tinyllama:latest',
+    prompt:
+      'Write a typescript function who calculates the fibonacci suit recursively without explanation',
+  })
+
+  if (res.status === 200) {
+    return res.data
+  }
+})
