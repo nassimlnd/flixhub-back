@@ -156,8 +156,8 @@ export default class MoviesController {
 
     console.log('[DEBUG] User ' + user?.email + ' is getting a random movie')
 
-    let movie = await Movie.query().orderByRaw('RAND()').limit(1)
-    return response.json(movie)
+    let movie = await Movie.query().orderByRaw('RANDOM()').limit(1)
+    return response.json(movie[0])
   }
 
   // End of random methods
